@@ -1,0 +1,6777 @@
+{
+	"openapi": "3.1.0",
+	"info": {
+		"title": "Organization API",
+		"description": "Activity Management and Billing System API",
+		"version": "1.0.0"
+	},
+	"paths": {
+		"/organizations": {
+			"get": {
+				"tags": [
+					"organizations"
+				],
+				"summary": "Get All Organizations",
+				"description": "Retrieve all organizations. Requires JWT authentication.",
+				"operationId": "get_all_organizations_organizations_get",
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/Organization"
+									},
+									"type": "array",
+									"title": "Response Get All Organizations Organizations Get"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"organizations"
+				],
+				"summary": "Create Organization",
+				"description": "Create a new organization.\n\n- **name**: Organization name (required)\n- **address**: Street address (required)\n- **city**: City (optional)\n- **zip**: Zip code (optional)\n- **state**: State (optional)\n- **phone**: Phone number (required)\n- **email**: Email address (required)\n- **active**: Active status (default: true)",
+				"operationId": "create_organization_organizations_post",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/OrganizationCreate"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"201": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"title": "Response Create Organization Organizations Post"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/organizations/{org_id}": {
+			"get": {
+				"tags": [
+					"organizations"
+				],
+				"summary": "Get Organization",
+				"description": "Retrieve a single organization by ID. Requires JWT authentication.",
+				"operationId": "get_organization_organizations__org_id__get",
+				"parameters": [
+					{
+						"name": "org_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Org Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Organization"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"tags": [
+					"organizations"
+				],
+				"summary": "Update Organization",
+				"description": "Update an existing organization. Only provided fields will be updated. Requires JWT authentication.",
+				"operationId": "update_organization_organizations__org_id__put",
+				"parameters": [
+					{
+						"name": "org_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Org Id"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/OrganizationUpdate"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Organization"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"organizations"
+				],
+				"summary": "Delete Organization",
+				"description": "Delete an organization by ID. Requires JWT authentication.",
+				"operationId": "delete_organization_organizations__org_id__delete",
+				"parameters": [
+					{
+						"name": "org_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Org Id"
+						}
+					}
+				],
+				"responses": {
+					"204": {
+						"description": "Successful Response"
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/activities": {
+			"get": {
+				"tags": [
+					"activities"
+				],
+				"summary": "Get All Activities",
+				"description": "Retrieve all activities.",
+				"operationId": "get_all_activities_activities_get",
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/Activity"
+									},
+									"type": "array",
+									"title": "Response Get All Activities Activities Get"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"activities"
+				],
+				"summary": "Create Activity",
+				"description": "Create a new activity.\n\n- **org_id**: Organization ID (required)\n- **name**: Activity name (required)\n- **category_id**: Category ID (required)\n- **description**: Activity description (optional)\n- **default_fee**: Default fee amount (optional)\n- **active**: Active status (default: true)",
+				"operationId": "create_activity_activities_post",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ActivityCreate"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"201": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"title": "Response Create Activity Activities Post"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/activities/{activity_id}": {
+			"get": {
+				"tags": [
+					"activities"
+				],
+				"summary": "Get Activity",
+				"description": "Retrieve a single activity by ID.",
+				"operationId": "get_activity_activities__activity_id__get",
+				"parameters": [
+					{
+						"name": "activity_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Activity Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Activity"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"tags": [
+					"activities"
+				],
+				"summary": "Update Activity",
+				"description": "Update an existing activity.\n\n- **activity_id**: Activity ID (required in URL)\n- All other fields are optional",
+				"operationId": "update_activity_activities__activity_id__put",
+				"parameters": [
+					{
+						"name": "activity_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Activity Id"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ActivityUpdate"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"title": "Response Update Activity Activities  Activity Id  Put"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"activities"
+				],
+				"summary": "Delete Activity",
+				"description": "Delete an activity by ID.",
+				"operationId": "delete_activity_activities__activity_id__delete",
+				"parameters": [
+					{
+						"name": "activity_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Activity Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"title": "Response Delete Activity Activities  Activity Id  Delete"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/activities/organization/{org_id}": {
+			"get": {
+				"tags": [
+					"activities"
+				],
+				"summary": "Get Activities By Organization",
+				"description": "Retrieve all activities for a specific organization.",
+				"operationId": "get_activities_by_organization_activities_organization__org_id__get",
+				"parameters": [
+					{
+						"name": "org_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Org Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/Activity"
+									},
+									"title": "Response Get Activities By Organization Activities Organization  Org Id  Get"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/trainers": {
+			"get": {
+				"tags": [
+					"trainers"
+				],
+				"summary": "Get All Trainers",
+				"description": "Retrieve all trainers.",
+				"operationId": "get_all_trainers_trainers_get",
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/Trainer"
+									},
+									"type": "array",
+									"title": "Response Get All Trainers Trainers Get"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"trainers"
+				],
+				"summary": "Create Trainer",
+				"description": "Create a new trainer.\n\n- **org_id**: Organization ID (required)\n- **first_name**: First name (required)\n- **last_name**: Last name (required)\n- **phone**: Phone number (optional)\n- **email**: Email address (optional)\n- **hire_date**: Hire date (optional)\n- **active**: Active status (default: true)",
+				"operationId": "create_trainer_trainers_post",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/TrainerCreate"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"201": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"title": "Response Create Trainer Trainers Post"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/trainers/{trainer_id}": {
+			"get": {
+				"tags": [
+					"trainers"
+				],
+				"summary": "Get Trainer",
+				"description": "Retrieve a single trainer by ID.",
+				"operationId": "get_trainer_trainers__trainer_id__get",
+				"parameters": [
+					{
+						"name": "trainer_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Trainer Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Trainer"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"tags": [
+					"trainers"
+				],
+				"summary": "Update Trainer",
+				"description": "Update an existing trainer.\n\n- **trainer_id**: Trainer ID (required in URL)\n- All other fields are optional",
+				"operationId": "update_trainer_trainers__trainer_id__put",
+				"parameters": [
+					{
+						"name": "trainer_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Trainer Id"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/TrainerUpdate"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"title": "Response Update Trainer Trainers  Trainer Id  Put"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"trainers"
+				],
+				"summary": "Delete Trainer",
+				"description": "Delete a trainer by ID.",
+				"operationId": "delete_trainer_trainers__trainer_id__delete",
+				"parameters": [
+					{
+						"name": "trainer_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Trainer Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"title": "Response Delete Trainer Trainers  Trainer Id  Delete"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/trainers/organization/{org_id}": {
+			"get": {
+				"tags": [
+					"trainers"
+				],
+				"summary": "Get Trainers By Organization",
+				"description": "Retrieve all trainers for a specific organization.",
+				"operationId": "get_trainers_by_organization_trainers_organization__org_id__get",
+				"parameters": [
+					{
+						"name": "org_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Org Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/Trainer"
+									},
+									"title": "Response Get Trainers By Organization Trainers Organization  Org Id  Get"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/activitytrainers": {
+			"get": {
+				"tags": [
+					"activitytrainers"
+				],
+				"summary": "Get All Activity Trainers",
+				"description": "Retrieve all activity-trainer relationships.",
+				"operationId": "get_all_activity_trainers_activitytrainers_get",
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/ActivityTrainer"
+									},
+									"type": "array",
+									"title": "Response Get All Activity Trainers Activitytrainers Get"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"activitytrainers"
+				],
+				"summary": "Create Activity Trainer",
+				"description": "Create a new activity-trainer relationship.\n\n- **activity_id**: Activity ID (required)\n- **trainer_id**: Trainer ID (required)\n- **role**: Trainer role for this activity (optional)",
+				"operationId": "create_activity_trainer_activitytrainers_post",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ActivityTrainerCreate"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"201": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ActivityTrainer"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/activitytrainers/activity/{activity_id}": {
+			"get": {
+				"tags": [
+					"activitytrainers"
+				],
+				"summary": "Get Trainers By Activity",
+				"description": "Retrieve all trainers assigned to a specific activity.",
+				"operationId": "get_trainers_by_activity_activitytrainers_activity__activity_id__get",
+				"parameters": [
+					{
+						"name": "activity_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Activity Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/ActivityTrainer"
+									},
+									"title": "Response Get Trainers By Activity Activitytrainers Activity  Activity Id  Get"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/activitytrainers/trainer/{trainer_id}": {
+			"get": {
+				"tags": [
+					"activitytrainers"
+				],
+				"summary": "Get Activities By Trainer",
+				"description": "Retrieve all activities assigned to a specific trainer.",
+				"operationId": "get_activities_by_trainer_activitytrainers_trainer__trainer_id__get",
+				"parameters": [
+					{
+						"name": "trainer_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Trainer Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/ActivityTrainer"
+									},
+									"title": "Response Get Activities By Trainer Activitytrainers Trainer  Trainer Id  Get"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/activitytrainers/{activity_id}/{trainer_id}": {
+			"get": {
+				"tags": [
+					"activitytrainers"
+				],
+				"summary": "Get Activity Trainer",
+				"description": "Retrieve a specific activity-trainer relationship.",
+				"operationId": "get_activity_trainer_activitytrainers__activity_id___trainer_id__get",
+				"parameters": [
+					{
+						"name": "activity_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Activity Id"
+						}
+					},
+					{
+						"name": "trainer_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Trainer Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ActivityTrainer"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"tags": [
+					"activitytrainers"
+				],
+				"summary": "Update Activity Trainer",
+				"description": "Update an existing activity-trainer relationship.\n\n- **activity_id**: Activity ID (required in URL)\n- **trainer_id**: Trainer ID (required in URL)\n- **role**: Trainer role (optional)",
+				"operationId": "update_activity_trainer_activitytrainers__activity_id___trainer_id__put",
+				"parameters": [
+					{
+						"name": "activity_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Activity Id"
+						}
+					},
+					{
+						"name": "trainer_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Trainer Id"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ActivityTrainerUpdate"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"title": "Response Update Activity Trainer Activitytrainers  Activity Id   Trainer Id  Put"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"activitytrainers"
+				],
+				"summary": "Delete Activity Trainer",
+				"description": "Delete an activity-trainer relationship.",
+				"operationId": "delete_activity_trainer_activitytrainers__activity_id___trainer_id__delete",
+				"parameters": [
+					{
+						"name": "activity_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Activity Id"
+						}
+					},
+					{
+						"name": "trainer_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Trainer Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"title": "Response Delete Activity Trainer Activitytrainers  Activity Id   Trainer Id  Delete"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/attendance": {
+			"get": {
+				"tags": [
+					"attendance"
+				],
+				"summary": "Get All Attendance",
+				"description": "Retrieve all attendance records.",
+				"operationId": "get_all_attendance_attendance_get",
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/Attendance"
+									},
+									"type": "array",
+									"title": "Response Get All Attendance Attendance Get"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"attendance"
+				],
+				"summary": "Create Attendance",
+				"description": "Create a new attendance record.\n\n- **session_id**: Session ID (required)\n- **enrollment_id**: Enrollment ID (required)\n- **status**: Attendance status (required)\n- **marked_at**: Timestamp when marked (required)\n- **marked_by**: User ID who marked attendance (optional)",
+				"operationId": "create_attendance_attendance_post",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AttendanceCreate"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"201": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"title": "Response Create Attendance Attendance Post"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/attendance/session/{session_id}": {
+			"get": {
+				"tags": [
+					"attendance"
+				],
+				"summary": "Get Attendance By Session",
+				"description": "Retrieve all attendance records for a specific session.",
+				"operationId": "get_attendance_by_session_attendance_session__session_id__get",
+				"parameters": [
+					{
+						"name": "session_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Session Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/Attendance"
+									},
+									"title": "Response Get Attendance By Session Attendance Session  Session Id  Get"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/attendance/enrollment/{enrollment_id}": {
+			"get": {
+				"tags": [
+					"attendance"
+				],
+				"summary": "Get Attendance By Enrollment",
+				"description": "Retrieve all attendance records for a specific enrollment.",
+				"operationId": "get_attendance_by_enrollment_attendance_enrollment__enrollment_id__get",
+				"parameters": [
+					{
+						"name": "enrollment_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Enrollment Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/Attendance"
+									},
+									"title": "Response Get Attendance By Enrollment Attendance Enrollment  Enrollment Id  Get"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/attendance/{attendance_id}": {
+			"get": {
+				"tags": [
+					"attendance"
+				],
+				"summary": "Get Attendance",
+				"description": "Retrieve a single attendance record by ID.",
+				"operationId": "get_attendance_attendance__attendance_id__get",
+				"parameters": [
+					{
+						"name": "attendance_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Attendance Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Attendance"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"tags": [
+					"attendance"
+				],
+				"summary": "Update Attendance",
+				"description": "Update an existing attendance record.\n\n- **attendance_id**: Attendance ID (required in URL)\n- All other fields are optional",
+				"operationId": "update_attendance_attendance__attendance_id__put",
+				"parameters": [
+					{
+						"name": "attendance_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Attendance Id"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AttendanceUpdate"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"title": "Response Update Attendance Attendance  Attendance Id  Put"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"attendance"
+				],
+				"summary": "Delete Attendance",
+				"description": "Delete an attendance record by ID.",
+				"operationId": "delete_attendance_attendance__attendance_id__delete",
+				"parameters": [
+					{
+						"name": "attendance_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Attendance Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"title": "Response Delete Attendance Attendance  Attendance Id  Delete"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/students": {
+			"get": {
+				"tags": [
+					"students"
+				],
+				"summary": "Get All Students",
+				"description": "Retrieve all students.",
+				"operationId": "get_all_students_students_get",
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/Student"
+									},
+									"type": "array",
+									"title": "Response Get All Students Students Get"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"students"
+				],
+				"summary": "Create Student",
+				"description": "Create a new student.\n\n- **org_id**: Organization ID (required)\n- **first_name**: First name (required)\n- **last_name**: Last name (required)\n- **dob**: Date of birth (optional)\n- **guardian_name**: Guardian name (optional)\n- **guardian_phone**: Guardian phone (optional)\n- **guardian_email**: Guardian email (optional)\n- **notes**: Additional notes (optional)\n- **active**: Active status (default: true)",
+				"operationId": "create_student_students_post",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/StudentCreate"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"201": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"title": "Response Create Student Students Post"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/students/organization/{org_id}": {
+			"get": {
+				"tags": [
+					"students"
+				],
+				"summary": "Get Students By Organization",
+				"description": "Retrieve all students for a specific organization.",
+				"operationId": "get_students_by_organization_students_organization__org_id__get",
+				"parameters": [
+					{
+						"name": "org_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Org Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/Student"
+									},
+									"title": "Response Get Students By Organization Students Organization  Org Id  Get"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/students/{student_id}": {
+			"get": {
+				"tags": [
+					"students"
+				],
+				"summary": "Get Student",
+				"description": "Retrieve a single student by ID.",
+				"operationId": "get_student_students__student_id__get",
+				"parameters": [
+					{
+						"name": "student_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Student Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Student"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"tags": [
+					"students"
+				],
+				"summary": "Update Student",
+				"description": "Update an existing student.\n\n- **student_id**: Student ID (required in URL)\n- All other fields are optional",
+				"operationId": "update_student_students__student_id__put",
+				"parameters": [
+					{
+						"name": "student_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Student Id"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/StudentUpdate"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"title": "Response Update Student Students  Student Id  Put"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"students"
+				],
+				"summary": "Delete Student",
+				"description": "Delete a student by ID.",
+				"operationId": "delete_student_students__student_id__delete",
+				"parameters": [
+					{
+						"name": "student_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Student Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"title": "Response Delete Student Students  Student Id  Delete"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/batches": {
+			"get": {
+				"tags": [
+					"batches"
+				],
+				"summary": "Get All Batches",
+				"description": "Retrieve all batches.",
+				"operationId": "get_all_batches_batches_get",
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/Batch"
+									},
+									"type": "array",
+									"title": "Response Get All Batches Batches Get"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"batches"
+				],
+				"summary": "Create Batch",
+				"description": "Create a new batch.\n\n- **org_id**: Organization ID (required)\n- **activity_id**: Activity ID (required)\n- **fee_plan_id**: Fee Plan ID (required)\n- **name**: Batch name (required)\n- **start_date**: Start date (required)\n- **end_date**: End date (optional)\n- **capacity**: Batch capacity (optional)\n- **location**: Location (optional)\n- **status**: Batch status (required)",
+				"operationId": "create_batch_batches_post",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/BatchCreate"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"201": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"title": "Response Create Batch Batches Post"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/batches/organization/{org_id}": {
+			"get": {
+				"tags": [
+					"batches"
+				],
+				"summary": "Get Batches By Organization",
+				"description": "Retrieve all batches for a specific organization.",
+				"operationId": "get_batches_by_organization_batches_organization__org_id__get",
+				"parameters": [
+					{
+						"name": "org_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Org Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/Batch"
+									},
+									"title": "Response Get Batches By Organization Batches Organization  Org Id  Get"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/batches/activity/{activity_id}": {
+			"get": {
+				"tags": [
+					"batches"
+				],
+				"summary": "Get Batches By Activity",
+				"description": "Retrieve all batches for a specific activity.",
+				"operationId": "get_batches_by_activity_batches_activity__activity_id__get",
+				"parameters": [
+					{
+						"name": "activity_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Activity Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/Batch"
+									},
+									"title": "Response Get Batches By Activity Batches Activity  Activity Id  Get"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/batches/{batch_id}": {
+			"get": {
+				"tags": [
+					"batches"
+				],
+				"summary": "Get Batch",
+				"description": "Retrieve a single batch by ID.",
+				"operationId": "get_batch_batches__batch_id__get",
+				"parameters": [
+					{
+						"name": "batch_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Batch Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Batch"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"tags": [
+					"batches"
+				],
+				"summary": "Update Batch",
+				"description": "Update an existing batch.\n\n- **batch_id**: Batch ID (required in URL)\n- All other fields are optional",
+				"operationId": "update_batch_batches__batch_id__put",
+				"parameters": [
+					{
+						"name": "batch_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Batch Id"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/BatchUpdate"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"title": "Response Update Batch Batches  Batch Id  Put"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"batches"
+				],
+				"summary": "Delete Batch",
+				"description": "Delete a batch by ID.",
+				"operationId": "delete_batch_batches__batch_id__delete",
+				"parameters": [
+					{
+						"name": "batch_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Batch Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"title": "Response Delete Batch Batches  Batch Id  Delete"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/batchsessions": {
+			"get": {
+				"tags": [
+					"batchsessions"
+				],
+				"summary": "Get All Batch Sessions",
+				"description": "Retrieve all batch sessions.",
+				"operationId": "get_all_batch_sessions_batchsessions_get",
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/BatchSession"
+									},
+									"type": "array",
+									"title": "Response Get All Batch Sessions Batchsessions Get"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"batchsessions"
+				],
+				"summary": "Create Batch Session",
+				"description": "Create a new batch session.\n\n- **batch_id**: Batch ID (required)\n- **session_date**: Session date (required)\n- **start_time**: Start time (required)\n- **end_time**: End time (required)\n- **status**: Session status (required)\n- **notes**: Session notes (optional)",
+				"operationId": "create_batch_session_batchsessions_post",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/BatchSessionCreate"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"201": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"title": "Response Create Batch Session Batchsessions Post"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/batchsessions/batch/{batch_id}": {
+			"get": {
+				"tags": [
+					"batchsessions"
+				],
+				"summary": "Get Sessions By Batch",
+				"description": "Retrieve all sessions for a specific batch.",
+				"operationId": "get_sessions_by_batch_batchsessions_batch__batch_id__get",
+				"parameters": [
+					{
+						"name": "batch_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Batch Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/BatchSession"
+									},
+									"title": "Response Get Sessions By Batch Batchsessions Batch  Batch Id  Get"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/batchsessions/{session_id}": {
+			"get": {
+				"tags": [
+					"batchsessions"
+				],
+				"summary": "Get Batch Session",
+				"description": "Retrieve a single batch session by ID.",
+				"operationId": "get_batch_session_batchsessions__session_id__get",
+				"parameters": [
+					{
+						"name": "session_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Session Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BatchSession"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"tags": [
+					"batchsessions"
+				],
+				"summary": "Update Batch Session",
+				"description": "Update an existing batch session.\n\n- **session_id**: Session ID (required in URL)\n- All other fields are optional",
+				"operationId": "update_batch_session_batchsessions__session_id__put",
+				"parameters": [
+					{
+						"name": "session_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Session Id"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/BatchSessionUpdate"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"title": "Response Update Batch Session Batchsessions  Session Id  Put"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"batchsessions"
+				],
+				"summary": "Delete Batch Session",
+				"description": "Delete a batch session by ID.",
+				"operationId": "delete_batch_session_batchsessions__session_id__delete",
+				"parameters": [
+					{
+						"name": "session_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Session Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"title": "Response Delete Batch Session Batchsessions  Session Id  Delete"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/categories": {
+			"get": {
+				"tags": [
+					"categories"
+				],
+				"summary": "Get All Categories",
+				"description": "Retrieve all categories.",
+				"operationId": "get_all_categories_categories_get",
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/Category"
+									},
+									"type": "array",
+									"title": "Response Get All Categories Categories Get"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"categories"
+				],
+				"summary": "Create Category",
+				"description": "Create a new category.\n\n- **name**: Category name (required)\n- **active**: Active status (default: true)",
+				"operationId": "create_category_categories_post",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CategoryCreate"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"201": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"title": "Response Create Category Categories Post"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/categories/{category_id}": {
+			"get": {
+				"tags": [
+					"categories"
+				],
+				"summary": "Get Category",
+				"description": "Retrieve a single category by ID.",
+				"operationId": "get_category_categories__category_id__get",
+				"parameters": [
+					{
+						"name": "category_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Category Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Category"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"tags": [
+					"categories"
+				],
+				"summary": "Update Category",
+				"description": "Update an existing category.\n\n- **category_id**: Category ID (required in URL)\n- All other fields are optional",
+				"operationId": "update_category_categories__category_id__put",
+				"parameters": [
+					{
+						"name": "category_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Category Id"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CategoryUpdate"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"title": "Response Update Category Categories  Category Id  Put"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"categories"
+				],
+				"summary": "Delete Category",
+				"description": "Delete a category by ID.",
+				"operationId": "delete_category_categories__category_id__delete",
+				"parameters": [
+					{
+						"name": "category_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Category Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"title": "Response Delete Category Categories  Category Id  Delete"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/feeplans": {
+			"get": {
+				"tags": [
+					"feeplans"
+				],
+				"summary": "Get All Fee Plans",
+				"description": "Retrieve all fee plans.",
+				"operationId": "get_all_fee_plans_feeplans_get",
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/FeePlan"
+									},
+									"type": "array",
+									"title": "Response Get All Fee Plans Feeplans Get"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"feeplans"
+				],
+				"summary": "Create Fee Plan",
+				"description": "Create a new fee plan.\n\n- **org_id**: Organization ID (required)\n- **name**: Fee plan name (required)\n- **billing_type**: Billing type (required)\n- **amount**: Fee amount (required)\n- **currency**: Currency code (3 chars, required)\n- **active**: Active status (default: true)",
+				"operationId": "create_fee_plan_feeplans_post",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/FeePlanCreate"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"201": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"title": "Response Create Fee Plan Feeplans Post"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/feeplans/organization/{org_id}": {
+			"get": {
+				"tags": [
+					"feeplans"
+				],
+				"summary": "Get Fee Plans By Organization",
+				"description": "Retrieve all fee plans for a specific organization.",
+				"operationId": "get_fee_plans_by_organization_feeplans_organization__org_id__get",
+				"parameters": [
+					{
+						"name": "org_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Org Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/FeePlan"
+									},
+									"title": "Response Get Fee Plans By Organization Feeplans Organization  Org Id  Get"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/feeplans/{fee_plan_id}": {
+			"get": {
+				"tags": [
+					"feeplans"
+				],
+				"summary": "Get Fee Plan",
+				"description": "Retrieve a single fee plan by ID.",
+				"operationId": "get_fee_plan_feeplans__fee_plan_id__get",
+				"parameters": [
+					{
+						"name": "fee_plan_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Fee Plan Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/FeePlan"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"tags": [
+					"feeplans"
+				],
+				"summary": "Update Fee Plan",
+				"description": "Update an existing fee plan.\n\n- **fee_plan_id**: Fee Plan ID (required in URL)\n- All other fields are optional",
+				"operationId": "update_fee_plan_feeplans__fee_plan_id__put",
+				"parameters": [
+					{
+						"name": "fee_plan_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Fee Plan Id"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/FeePlanUpdate"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"title": "Response Update Fee Plan Feeplans  Fee Plan Id  Put"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"feeplans"
+				],
+				"summary": "Delete Fee Plan",
+				"description": "Delete a fee plan by ID.",
+				"operationId": "delete_fee_plan_feeplans__fee_plan_id__delete",
+				"parameters": [
+					{
+						"name": "fee_plan_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Fee Plan Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"title": "Response Delete Fee Plan Feeplans  Fee Plan Id  Delete"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/invoices": {
+			"get": {
+				"tags": [
+					"invoices"
+				],
+				"summary": "Get All Invoices",
+				"description": "Retrieve all invoices.",
+				"operationId": "get_all_invoices_invoices_get",
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/Invoice"
+									},
+									"type": "array",
+									"title": "Response Get All Invoices Invoices Get"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"invoices"
+				],
+				"summary": "Create Invoice",
+				"description": "Create a new invoice.\n\n- **org_id**: Organization ID (required)\n- **enrollment_id**: Enrollment ID (required)\n- **invoice_date**: Invoice date (required)\n- **due_date**: Due date (required)\n- **total_amount**: Total invoice amount (required)\n- **status**: Invoice status (required)",
+				"operationId": "create_invoice_invoices_post",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/InvoiceCreate"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"201": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"title": "Response Create Invoice Invoices Post"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/invoices/organization/{org_id}": {
+			"get": {
+				"tags": [
+					"invoices"
+				],
+				"summary": "Get Invoices By Organization",
+				"description": "Retrieve all invoices for a specific organization.",
+				"operationId": "get_invoices_by_organization_invoices_organization__org_id__get",
+				"parameters": [
+					{
+						"name": "org_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Org Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/Invoice"
+									},
+									"title": "Response Get Invoices By Organization Invoices Organization  Org Id  Get"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/invoices/enrollment/{enrollment_id}": {
+			"get": {
+				"tags": [
+					"invoices"
+				],
+				"summary": "Get Invoices By Enrollment",
+				"description": "Retrieve all invoices for a specific enrollment.",
+				"operationId": "get_invoices_by_enrollment_invoices_enrollment__enrollment_id__get",
+				"parameters": [
+					{
+						"name": "enrollment_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Enrollment Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/Invoice"
+									},
+									"title": "Response Get Invoices By Enrollment Invoices Enrollment  Enrollment Id  Get"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/invoices/{invoice_id}": {
+			"get": {
+				"tags": [
+					"invoices"
+				],
+				"summary": "Get Invoice",
+				"description": "Retrieve a single invoice by ID.",
+				"operationId": "get_invoice_invoices__invoice_id__get",
+				"parameters": [
+					{
+						"name": "invoice_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Invoice Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Invoice"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"tags": [
+					"invoices"
+				],
+				"summary": "Update Invoice",
+				"description": "Update an existing invoice.\n\n- **invoice_id**: Invoice ID (required in URL)\n- All other fields are optional",
+				"operationId": "update_invoice_invoices__invoice_id__put",
+				"parameters": [
+					{
+						"name": "invoice_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Invoice Id"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/InvoiceUpdate"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"title": "Response Update Invoice Invoices  Invoice Id  Put"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"invoices"
+				],
+				"summary": "Delete Invoice",
+				"description": "Delete an invoice by ID.",
+				"operationId": "delete_invoice_invoices__invoice_id__delete",
+				"parameters": [
+					{
+						"name": "invoice_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Invoice Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"title": "Response Delete Invoice Invoices  Invoice Id  Delete"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/payments": {
+			"get": {
+				"tags": [
+					"payments"
+				],
+				"summary": "Get All Payments",
+				"description": "Retrieve all payments.",
+				"operationId": "get_all_payments_payments_get",
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/Payment"
+									},
+									"type": "array",
+									"title": "Response Get All Payments Payments Get"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"payments"
+				],
+				"summary": "Create Payment",
+				"description": "Create a new payment.\n\n- **org_id**: Organization ID (required)\n- **invoice_id**: Invoice ID (required)\n- **payment_date**: Payment date (required)\n- **amount**: Payment amount (required)\n- **method**: Payment method (required)\n- **reference_no**: Payment reference number (optional)\n- **notes**: Payment notes (optional)",
+				"operationId": "create_payment_payments_post",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PaymentCreate"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"201": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"title": "Response Create Payment Payments Post"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/payments/organization/{org_id}": {
+			"get": {
+				"tags": [
+					"payments"
+				],
+				"summary": "Get Payments By Organization",
+				"description": "Retrieve all payments for a specific organization.",
+				"operationId": "get_payments_by_organization_payments_organization__org_id__get",
+				"parameters": [
+					{
+						"name": "org_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Org Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/Payment"
+									},
+									"title": "Response Get Payments By Organization Payments Organization  Org Id  Get"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/payments/invoice/{invoice_id}": {
+			"get": {
+				"tags": [
+					"payments"
+				],
+				"summary": "Get Payments By Invoice",
+				"description": "Retrieve all payments for a specific invoice.",
+				"operationId": "get_payments_by_invoice_payments_invoice__invoice_id__get",
+				"parameters": [
+					{
+						"name": "invoice_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Invoice Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/Payment"
+									},
+									"title": "Response Get Payments By Invoice Payments Invoice  Invoice Id  Get"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/payments/{payment_id}": {
+			"get": {
+				"tags": [
+					"payments"
+				],
+				"summary": "Get Payment",
+				"description": "Retrieve a single payment by ID.",
+				"operationId": "get_payment_payments__payment_id__get",
+				"parameters": [
+					{
+						"name": "payment_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Payment Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Payment"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"tags": [
+					"payments"
+				],
+				"summary": "Update Payment",
+				"description": "Update an existing payment.\n\n- **payment_id**: Payment ID (required in URL)\n- All other fields are optional",
+				"operationId": "update_payment_payments__payment_id__put",
+				"parameters": [
+					{
+						"name": "payment_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Payment Id"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PaymentUpdate"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"title": "Response Update Payment Payments  Payment Id  Put"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"payments"
+				],
+				"summary": "Delete Payment",
+				"description": "Delete a payment by ID.",
+				"operationId": "delete_payment_payments__payment_id__delete",
+				"parameters": [
+					{
+						"name": "payment_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Payment Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"title": "Response Delete Payment Payments  Payment Id  Delete"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/roles": {
+			"get": {
+				"tags": [
+					"roles"
+				],
+				"summary": "Get All Roles",
+				"description": "Retrieve all roles.",
+				"operationId": "get_all_roles_roles_get",
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/Role"
+									},
+									"type": "array",
+									"title": "Response Get All Roles Roles Get"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"roles"
+				],
+				"summary": "Create Role",
+				"description": "Create a new role.\n\n- **org_id**: Organization ID (required)\n- **name**: Role name (required)",
+				"operationId": "create_role_roles_post",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RoleCreate"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"201": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"title": "Response Create Role Roles Post"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/roles/organization/{org_id}": {
+			"get": {
+				"tags": [
+					"roles"
+				],
+				"summary": "Get Roles By Organization",
+				"description": "Retrieve all roles for a specific organization.",
+				"operationId": "get_roles_by_organization_roles_organization__org_id__get",
+				"parameters": [
+					{
+						"name": "org_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Org Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/Role"
+									},
+									"title": "Response Get Roles By Organization Roles Organization  Org Id  Get"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/roles/{role_id}": {
+			"get": {
+				"tags": [
+					"roles"
+				],
+				"summary": "Get Role",
+				"description": "Retrieve a single role by ID.",
+				"operationId": "get_role_roles__role_id__get",
+				"parameters": [
+					{
+						"name": "role_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Role Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Role"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"tags": [
+					"roles"
+				],
+				"summary": "Update Role",
+				"description": "Update an existing role.\n\n- **role_id**: Role ID (required in URL)\n- All other fields are optional",
+				"operationId": "update_role_roles__role_id__put",
+				"parameters": [
+					{
+						"name": "role_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Role Id"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RoleUpdate"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"title": "Response Update Role Roles  Role Id  Put"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"roles"
+				],
+				"summary": "Delete Role",
+				"description": "Delete a role by ID.",
+				"operationId": "delete_role_roles__role_id__delete",
+				"parameters": [
+					{
+						"name": "role_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Role Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"title": "Response Delete Role Roles  Role Id  Delete"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/users": {
+			"get": {
+				"tags": [
+					"users"
+				],
+				"summary": "Get All Users",
+				"description": "Retrieve all users.",
+				"operationId": "get_all_users_users_get",
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/User"
+									},
+									"type": "array",
+									"title": "Response Get All Users Users Get"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"tags": [
+					"users"
+				],
+				"summary": "Create User",
+				"description": "Create a new user. Requires JWT authentication.\n\n- **org_id**: Organization ID (required)\n- **role_id**: Role ID (required)\n- **email**: Email address (required)\n- **phone**: Phone number (optional)\n- **password_hash**: Hashed password (optional)\n- **active**: User status (required)",
+				"operationId": "create_user_users_post",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UserCreate"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"201": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"title": "Response Create User Users Post"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/users/organization/{org_id}": {
+			"get": {
+				"tags": [
+					"users"
+				],
+				"summary": "Get Users By Organization",
+				"description": "Retrieve all users for a specific organization.",
+				"operationId": "get_users_by_organization_users_organization__org_id__get",
+				"parameters": [
+					{
+						"name": "org_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "Org Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"$ref": "#/components/schemas/User"
+									},
+									"title": "Response Get Users By Organization Users Organization  Org Id  Get"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/users/email/{email}": {
+			"get": {
+				"tags": [
+					"users"
+				],
+				"summary": "Get User By Email",
+				"description": "Retrieve a user by email address.",
+				"operationId": "get_user_by_email_users_email__email__get",
+				"parameters": [
+					{
+						"name": "email",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"title": "Email"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/User"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/users/{user_id}": {
+			"get": {
+				"tags": [
+					"users"
+				],
+				"summary": "Get User",
+				"description": "Retrieve a single user by ID.",
+				"operationId": "get_user_users__user_id__get",
+				"parameters": [
+					{
+						"name": "user_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "User Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/User"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"tags": [
+					"users"
+				],
+				"summary": "Update User",
+				"description": "Update an existing user.\n\n- **user_id**: User ID (required in URL)\n- All other fields are optional",
+				"operationId": "update_user_users__user_id__put",
+				"parameters": [
+					{
+						"name": "user_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "User Id"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UserUpdate"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"title": "Response Update User Users  User Id  Put"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"tags": [
+					"users"
+				],
+				"summary": "Delete User",
+				"description": "Delete a user by ID.",
+				"operationId": "delete_user_users__user_id__delete",
+				"parameters": [
+					{
+						"name": "user_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "User Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"title": "Response Delete User Users  User Id  Delete"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/users/{user_id}/last-login": {
+			"put": {
+				"tags": [
+					"users"
+				],
+				"summary": "Update Last Login",
+				"description": "Update the last login timestamp for a user.",
+				"operationId": "update_last_login_users__user_id__last_login_put",
+				"parameters": [
+					{
+						"name": "user_id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"title": "User Id"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"title": "Response Update Last Login Users  User Id  Last Login Put"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/users/authenticate/login": {
+			"post": {
+				"tags": [
+					"users"
+				],
+				"summary": "Authenticate User",
+				"description": "Authenticate user with email and password. Returns JWT token if credentials are valid.\n\n- **email**: User email address (required)\n- **password**: User password in plain text (will be hashed and compared with SHA256) (required)",
+				"operationId": "authenticate_user_users_authenticate_login_post",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/LoginRequest"
+							}
+						}
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TokenResponse"
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Validation Error",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/HTTPValidationError"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/health": {
+			"get": {
+				"summary": "Health Check",
+				"description": "Health check endpoint",
+				"operationId": "health_check_health_get",
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/protected/profile": {
+			"get": {
+				"summary": "Get Profile",
+				"description": "Protected endpoint - requires valid JWT token in Authorization header.\nExample: Authorization: Bearer <your_jwt_token>",
+				"operationId": "get_profile_protected_profile_get",
+				"responses": {
+					"200": {
+						"description": "Successful Response",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"Activity": {
+				"properties": {
+					"org_id": {
+						"type": "integer",
+						"title": "Org Id",
+						"description": "Organization ID"
+					},
+					"name": {
+						"type": "string",
+						"maxLength": 255,
+						"minLength": 1,
+						"title": "Name",
+						"description": "Activity name"
+					},
+					"category_id": {
+						"type": "integer",
+						"title": "Category Id",
+						"description": "Category ID"
+					},
+					"description": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Description",
+						"description": "Activity description"
+					},
+					"default_fee": {
+						"anyOf": [
+							{
+								"type": "number"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Default Fee",
+						"description": "Default fee"
+					},
+					"active": {
+						"anyOf": [
+							{
+								"type": "boolean"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Active",
+						"description": "Active status",
+						"default": true
+					},
+					"activity_id": {
+						"type": "integer",
+						"title": "Activity Id"
+					}
+				},
+				"type": "object",
+				"required": [
+					"org_id",
+					"name",
+					"category_id",
+					"activity_id"
+				],
+				"title": "Activity"
+			},
+			"ActivityCreate": {
+				"properties": {
+					"org_id": {
+						"type": "integer",
+						"title": "Org Id",
+						"description": "Organization ID"
+					},
+					"name": {
+						"type": "string",
+						"maxLength": 255,
+						"minLength": 1,
+						"title": "Name",
+						"description": "Activity name"
+					},
+					"category_id": {
+						"type": "integer",
+						"title": "Category Id",
+						"description": "Category ID"
+					},
+					"description": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Description",
+						"description": "Activity description"
+					},
+					"default_fee": {
+						"anyOf": [
+							{
+								"type": "number"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Default Fee",
+						"description": "Default fee"
+					},
+					"active": {
+						"anyOf": [
+							{
+								"type": "boolean"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Active",
+						"description": "Active status",
+						"default": true
+					}
+				},
+				"type": "object",
+				"required": [
+					"org_id",
+					"name",
+					"category_id"
+				],
+				"title": "ActivityCreate"
+			},
+			"ActivityTrainer": {
+				"properties": {
+					"activity_id": {
+						"type": "integer",
+						"title": "Activity Id",
+						"description": "Activity ID"
+					},
+					"trainer_id": {
+						"type": "integer",
+						"title": "Trainer Id",
+						"description": "Trainer ID"
+					},
+					"role": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Role",
+						"description": "Role of trainer for this activity"
+					}
+				},
+				"type": "object",
+				"required": [
+					"activity_id",
+					"trainer_id"
+				],
+				"title": "ActivityTrainer"
+			},
+			"ActivityTrainerCreate": {
+				"properties": {
+					"activity_id": {
+						"type": "integer",
+						"title": "Activity Id",
+						"description": "Activity ID"
+					},
+					"trainer_id": {
+						"type": "integer",
+						"title": "Trainer Id",
+						"description": "Trainer ID"
+					},
+					"role": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Role",
+						"description": "Role of trainer for this activity"
+					}
+				},
+				"type": "object",
+				"required": [
+					"activity_id",
+					"trainer_id"
+				],
+				"title": "ActivityTrainerCreate"
+			},
+			"ActivityTrainerUpdate": {
+				"properties": {
+					"role": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 20
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Role"
+					}
+				},
+				"type": "object",
+				"title": "ActivityTrainerUpdate"
+			},
+			"ActivityUpdate": {
+				"properties": {
+					"org_id": {
+						"anyOf": [
+							{
+								"type": "integer"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Org Id"
+					},
+					"name": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 255,
+								"minLength": 1
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Name"
+					},
+					"category_id": {
+						"anyOf": [
+							{
+								"type": "integer"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Category Id"
+					},
+					"description": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Description"
+					},
+					"default_fee": {
+						"anyOf": [
+							{
+								"type": "number"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Default Fee"
+					},
+					"active": {
+						"anyOf": [
+							{
+								"type": "boolean"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Active"
+					}
+				},
+				"type": "object",
+				"title": "ActivityUpdate"
+			},
+			"Attendance": {
+				"properties": {
+					"session_id": {
+						"type": "integer",
+						"title": "Session Id",
+						"description": "Session ID"
+					},
+					"enrollment_id": {
+						"type": "integer",
+						"title": "Enrollment Id",
+						"description": "Enrollment ID"
+					},
+					"status": {
+						"type": "string",
+						"maxLength": 20,
+						"minLength": 1,
+						"title": "Status",
+						"description": "Attendance status"
+					},
+					"marked_at": {
+						"type": "string",
+						"format": "date-time",
+						"title": "Marked At",
+						"description": "Marked timestamp"
+					},
+					"marked_by": {
+						"anyOf": [
+							{
+								"type": "integer"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Marked By",
+						"description": "User ID who marked attendance"
+					},
+					"attendance_id": {
+						"type": "integer",
+						"title": "Attendance Id"
+					}
+				},
+				"type": "object",
+				"required": [
+					"session_id",
+					"enrollment_id",
+					"status",
+					"marked_at",
+					"attendance_id"
+				],
+				"title": "Attendance"
+			},
+			"AttendanceCreate": {
+				"properties": {
+					"session_id": {
+						"type": "integer",
+						"title": "Session Id",
+						"description": "Session ID"
+					},
+					"enrollment_id": {
+						"type": "integer",
+						"title": "Enrollment Id",
+						"description": "Enrollment ID"
+					},
+					"status": {
+						"type": "string",
+						"maxLength": 20,
+						"minLength": 1,
+						"title": "Status",
+						"description": "Attendance status"
+					},
+					"marked_at": {
+						"type": "string",
+						"format": "date-time",
+						"title": "Marked At",
+						"description": "Marked timestamp"
+					},
+					"marked_by": {
+						"anyOf": [
+							{
+								"type": "integer"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Marked By",
+						"description": "User ID who marked attendance"
+					}
+				},
+				"type": "object",
+				"required": [
+					"session_id",
+					"enrollment_id",
+					"status",
+					"marked_at"
+				],
+				"title": "AttendanceCreate"
+			},
+			"AttendanceUpdate": {
+				"properties": {
+					"session_id": {
+						"anyOf": [
+							{
+								"type": "integer"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Session Id"
+					},
+					"enrollment_id": {
+						"anyOf": [
+							{
+								"type": "integer"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Enrollment Id"
+					},
+					"status": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 20,
+								"minLength": 1
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Status"
+					},
+					"marked_at": {
+						"anyOf": [
+							{
+								"type": "string",
+								"format": "date-time"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Marked At"
+					},
+					"marked_by": {
+						"anyOf": [
+							{
+								"type": "integer"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Marked By"
+					}
+				},
+				"type": "object",
+				"title": "AttendanceUpdate"
+			},
+			"Batch": {
+				"properties": {
+					"org_id": {
+						"type": "integer",
+						"title": "Org Id",
+						"description": "Organization ID"
+					},
+					"activity_id": {
+						"type": "integer",
+						"title": "Activity Id",
+						"description": "Activity ID"
+					},
+					"fee_plan_id": {
+						"type": "integer",
+						"title": "Fee Plan Id",
+						"description": "Fee Plan ID"
+					},
+					"name": {
+						"type": "string",
+						"maxLength": 100,
+						"minLength": 1,
+						"title": "Name",
+						"description": "Batch name"
+					},
+					"start_date": {
+						"type": "string",
+						"format": "date",
+						"title": "Start Date",
+						"description": "Start date"
+					},
+					"end_date": {
+						"anyOf": [
+							{
+								"type": "string",
+								"format": "date"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "End Date",
+						"description": "End date"
+					},
+					"capacity": {
+						"anyOf": [
+							{
+								"type": "integer"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Capacity",
+						"description": "Batch capacity"
+					},
+					"location": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 150
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Location",
+						"description": "Location"
+					},
+					"status": {
+						"type": "string",
+						"maxLength": 30,
+						"minLength": 1,
+						"title": "Status",
+						"description": "Batch status"
+					},
+					"batch_id": {
+						"type": "integer",
+						"title": "Batch Id"
+					}
+				},
+				"type": "object",
+				"required": [
+					"org_id",
+					"activity_id",
+					"fee_plan_id",
+					"name",
+					"start_date",
+					"status",
+					"batch_id"
+				],
+				"title": "Batch"
+			},
+			"BatchCreate": {
+				"properties": {
+					"org_id": {
+						"type": "integer",
+						"title": "Org Id",
+						"description": "Organization ID"
+					},
+					"activity_id": {
+						"type": "integer",
+						"title": "Activity Id",
+						"description": "Activity ID"
+					},
+					"fee_plan_id": {
+						"type": "integer",
+						"title": "Fee Plan Id",
+						"description": "Fee Plan ID"
+					},
+					"name": {
+						"type": "string",
+						"maxLength": 100,
+						"minLength": 1,
+						"title": "Name",
+						"description": "Batch name"
+					},
+					"start_date": {
+						"type": "string",
+						"format": "date",
+						"title": "Start Date",
+						"description": "Start date"
+					},
+					"end_date": {
+						"anyOf": [
+							{
+								"type": "string",
+								"format": "date"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "End Date",
+						"description": "End date"
+					},
+					"capacity": {
+						"anyOf": [
+							{
+								"type": "integer"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Capacity",
+						"description": "Batch capacity"
+					},
+					"location": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 150
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Location",
+						"description": "Location"
+					},
+					"status": {
+						"type": "string",
+						"maxLength": 30,
+						"minLength": 1,
+						"title": "Status",
+						"description": "Batch status"
+					}
+				},
+				"type": "object",
+				"required": [
+					"org_id",
+					"activity_id",
+					"fee_plan_id",
+					"name",
+					"start_date",
+					"status"
+				],
+				"title": "BatchCreate"
+			},
+			"BatchSession": {
+				"properties": {
+					"batch_id": {
+						"type": "integer",
+						"title": "Batch Id",
+						"description": "Batch ID"
+					},
+					"session_date": {
+						"type": "string",
+						"format": "date",
+						"title": "Session Date",
+						"description": "Session date"
+					},
+					"start_time": {
+						"type": "string",
+						"format": "time",
+						"title": "Start Time",
+						"description": "Session start time"
+					},
+					"end_time": {
+						"type": "string",
+						"format": "time",
+						"title": "End Time",
+						"description": "Session end time"
+					},
+					"status": {
+						"type": "string",
+						"maxLength": 30,
+						"minLength": 1,
+						"title": "Status",
+						"description": "Session status"
+					},
+					"notes": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 500
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Notes",
+						"description": "Session notes"
+					},
+					"session_id": {
+						"type": "integer",
+						"title": "Session Id"
+					}
+				},
+				"type": "object",
+				"required": [
+					"batch_id",
+					"session_date",
+					"start_time",
+					"end_time",
+					"status",
+					"session_id"
+				],
+				"title": "BatchSession"
+			},
+			"BatchSessionCreate": {
+				"properties": {
+					"batch_id": {
+						"type": "integer",
+						"title": "Batch Id",
+						"description": "Batch ID"
+					},
+					"session_date": {
+						"type": "string",
+						"format": "date",
+						"title": "Session Date",
+						"description": "Session date"
+					},
+					"start_time": {
+						"type": "string",
+						"format": "time",
+						"title": "Start Time",
+						"description": "Session start time"
+					},
+					"end_time": {
+						"type": "string",
+						"format": "time",
+						"title": "End Time",
+						"description": "Session end time"
+					},
+					"status": {
+						"type": "string",
+						"maxLength": 30,
+						"minLength": 1,
+						"title": "Status",
+						"description": "Session status"
+					},
+					"notes": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 500
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Notes",
+						"description": "Session notes"
+					}
+				},
+				"type": "object",
+				"required": [
+					"batch_id",
+					"session_date",
+					"start_time",
+					"end_time",
+					"status"
+				],
+				"title": "BatchSessionCreate"
+			},
+			"BatchSessionUpdate": {
+				"properties": {
+					"batch_id": {
+						"anyOf": [
+							{
+								"type": "integer"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Batch Id"
+					},
+					"session_date": {
+						"anyOf": [
+							{
+								"type": "string",
+								"format": "date"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Session Date"
+					},
+					"start_time": {
+						"anyOf": [
+							{
+								"type": "string",
+								"format": "time"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Start Time"
+					},
+					"end_time": {
+						"anyOf": [
+							{
+								"type": "string",
+								"format": "time"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "End Time"
+					},
+					"status": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 30,
+								"minLength": 1
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Status"
+					},
+					"notes": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 500
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Notes"
+					}
+				},
+				"type": "object",
+				"title": "BatchSessionUpdate"
+			},
+			"BatchUpdate": {
+				"properties": {
+					"org_id": {
+						"anyOf": [
+							{
+								"type": "integer"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Org Id"
+					},
+					"activity_id": {
+						"anyOf": [
+							{
+								"type": "integer"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Activity Id"
+					},
+					"fee_plan_id": {
+						"anyOf": [
+							{
+								"type": "integer"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Fee Plan Id"
+					},
+					"name": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 100,
+								"minLength": 1
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Name"
+					},
+					"start_date": {
+						"anyOf": [
+							{
+								"type": "string",
+								"format": "date"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Start Date"
+					},
+					"end_date": {
+						"anyOf": [
+							{
+								"type": "string",
+								"format": "date"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "End Date"
+					},
+					"capacity": {
+						"anyOf": [
+							{
+								"type": "integer"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Capacity"
+					},
+					"location": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 150
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Location"
+					},
+					"status": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 30,
+								"minLength": 1
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Status"
+					}
+				},
+				"type": "object",
+				"title": "BatchUpdate"
+			},
+			"Category": {
+				"properties": {
+					"name": {
+						"type": "string",
+						"maxLength": 50,
+						"minLength": 1,
+						"title": "Name",
+						"description": "Category name"
+					},
+					"active": {
+						"anyOf": [
+							{
+								"type": "boolean"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Active",
+						"description": "Active status",
+						"default": true
+					},
+					"category_id": {
+						"type": "integer",
+						"title": "Category Id"
+					}
+				},
+				"type": "object",
+				"required": [
+					"name",
+					"category_id"
+				],
+				"title": "Category"
+			},
+			"CategoryCreate": {
+				"properties": {
+					"name": {
+						"type": "string",
+						"maxLength": 50,
+						"minLength": 1,
+						"title": "Name",
+						"description": "Category name"
+					},
+					"active": {
+						"anyOf": [
+							{
+								"type": "boolean"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Active",
+						"description": "Active status",
+						"default": true
+					}
+				},
+				"type": "object",
+				"required": [
+					"name"
+				],
+				"title": "CategoryCreate"
+			},
+			"CategoryUpdate": {
+				"properties": {
+					"name": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 50,
+								"minLength": 1
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Name"
+					},
+					"active": {
+						"anyOf": [
+							{
+								"type": "boolean"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Active"
+					}
+				},
+				"type": "object",
+				"title": "CategoryUpdate"
+			},
+			"FeePlan": {
+				"properties": {
+					"org_id": {
+						"type": "integer",
+						"title": "Org Id",
+						"description": "Organization ID"
+					},
+					"name": {
+						"type": "string",
+						"maxLength": 100,
+						"minLength": 1,
+						"title": "Name",
+						"description": "Fee plan name"
+					},
+					"billing_type": {
+						"type": "string",
+						"maxLength": 20,
+						"minLength": 1,
+						"title": "Billing Type",
+						"description": "Billing type"
+					},
+					"amount": {
+						"type": "string",
+						"title": "Amount",
+						"description": "Fee amount"
+					},
+					"currency": {
+						"type": "string",
+						"maxLength": 3,
+						"minLength": 3,
+						"title": "Currency",
+						"description": "Currency code (3 chars)"
+					},
+					"active": {
+						"type": "boolean",
+						"title": "Active",
+						"description": "Active status",
+						"default": true
+					},
+					"fee_plan_id": {
+						"type": "integer",
+						"title": "Fee Plan Id"
+					}
+				},
+				"type": "object",
+				"required": [
+					"org_id",
+					"name",
+					"billing_type",
+					"amount",
+					"currency",
+					"fee_plan_id"
+				],
+				"title": "FeePlan"
+			},
+			"FeePlanCreate": {
+				"properties": {
+					"org_id": {
+						"type": "integer",
+						"title": "Org Id",
+						"description": "Organization ID"
+					},
+					"name": {
+						"type": "string",
+						"maxLength": 100,
+						"minLength": 1,
+						"title": "Name",
+						"description": "Fee plan name"
+					},
+					"billing_type": {
+						"type": "string",
+						"maxLength": 20,
+						"minLength": 1,
+						"title": "Billing Type",
+						"description": "Billing type"
+					},
+					"amount": {
+						"anyOf": [
+							{
+								"type": "number"
+							},
+							{
+								"type": "string"
+							}
+						],
+						"title": "Amount",
+						"description": "Fee amount"
+					},
+					"currency": {
+						"type": "string",
+						"maxLength": 3,
+						"minLength": 3,
+						"title": "Currency",
+						"description": "Currency code (3 chars)"
+					},
+					"active": {
+						"type": "boolean",
+						"title": "Active",
+						"description": "Active status",
+						"default": true
+					}
+				},
+				"type": "object",
+				"required": [
+					"org_id",
+					"name",
+					"billing_type",
+					"amount",
+					"currency"
+				],
+				"title": "FeePlanCreate"
+			},
+			"FeePlanUpdate": {
+				"properties": {
+					"org_id": {
+						"anyOf": [
+							{
+								"type": "integer"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Org Id"
+					},
+					"name": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 100,
+								"minLength": 1
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Name"
+					},
+					"billing_type": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 20,
+								"minLength": 1
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Billing Type"
+					},
+					"amount": {
+						"anyOf": [
+							{
+								"type": "number"
+							},
+							{
+								"type": "string"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Amount"
+					},
+					"currency": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 3,
+								"minLength": 3
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Currency"
+					},
+					"active": {
+						"anyOf": [
+							{
+								"type": "boolean"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Active"
+					}
+				},
+				"type": "object",
+				"title": "FeePlanUpdate"
+			},
+			"HTTPValidationError": {
+				"properties": {
+					"detail": {
+						"items": {
+							"$ref": "#/components/schemas/ValidationError"
+						},
+						"type": "array",
+						"title": "Detail"
+					}
+				},
+				"type": "object",
+				"title": "HTTPValidationError"
+			},
+			"Invoice": {
+				"properties": {
+					"org_id": {
+						"type": "integer",
+						"title": "Org Id",
+						"description": "Organization ID"
+					},
+					"enrollment_id": {
+						"type": "integer",
+						"title": "Enrollment Id",
+						"description": "Enrollment ID"
+					},
+					"invoice_date": {
+						"type": "string",
+						"format": "date",
+						"title": "Invoice Date",
+						"description": "Invoice date"
+					},
+					"due_date": {
+						"type": "string",
+						"format": "date",
+						"title": "Due Date",
+						"description": "Due date"
+					},
+					"total_amount": {
+						"type": "string",
+						"title": "Total Amount",
+						"description": "Total invoice amount"
+					},
+					"status": {
+						"type": "string",
+						"maxLength": 20,
+						"minLength": 1,
+						"title": "Status",
+						"description": "Invoice status"
+					},
+					"invoice_id": {
+						"type": "integer",
+						"title": "Invoice Id"
+					}
+				},
+				"type": "object",
+				"required": [
+					"org_id",
+					"enrollment_id",
+					"invoice_date",
+					"due_date",
+					"total_amount",
+					"status",
+					"invoice_id"
+				],
+				"title": "Invoice"
+			},
+			"InvoiceCreate": {
+				"properties": {
+					"org_id": {
+						"type": "integer",
+						"title": "Org Id",
+						"description": "Organization ID"
+					},
+					"enrollment_id": {
+						"type": "integer",
+						"title": "Enrollment Id",
+						"description": "Enrollment ID"
+					},
+					"invoice_date": {
+						"type": "string",
+						"format": "date",
+						"title": "Invoice Date",
+						"description": "Invoice date"
+					},
+					"due_date": {
+						"type": "string",
+						"format": "date",
+						"title": "Due Date",
+						"description": "Due date"
+					},
+					"total_amount": {
+						"anyOf": [
+							{
+								"type": "number"
+							},
+							{
+								"type": "string"
+							}
+						],
+						"title": "Total Amount",
+						"description": "Total invoice amount"
+					},
+					"status": {
+						"type": "string",
+						"maxLength": 20,
+						"minLength": 1,
+						"title": "Status",
+						"description": "Invoice status"
+					}
+				},
+				"type": "object",
+				"required": [
+					"org_id",
+					"enrollment_id",
+					"invoice_date",
+					"due_date",
+					"total_amount",
+					"status"
+				],
+				"title": "InvoiceCreate"
+			},
+			"InvoiceUpdate": {
+				"properties": {
+					"org_id": {
+						"anyOf": [
+							{
+								"type": "integer"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Org Id"
+					},
+					"enrollment_id": {
+						"anyOf": [
+							{
+								"type": "integer"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Enrollment Id"
+					},
+					"invoice_date": {
+						"anyOf": [
+							{
+								"type": "string",
+								"format": "date"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Invoice Date"
+					},
+					"due_date": {
+						"anyOf": [
+							{
+								"type": "string",
+								"format": "date"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Due Date"
+					},
+					"total_amount": {
+						"anyOf": [
+							{
+								"type": "number"
+							},
+							{
+								"type": "string"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Total Amount"
+					},
+					"status": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 20,
+								"minLength": 1
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Status"
+					}
+				},
+				"type": "object",
+				"title": "InvoiceUpdate"
+			},
+			"LoginRequest": {
+				"properties": {
+					"email": {
+						"type": "string",
+						"maxLength": 150,
+						"minLength": 1,
+						"title": "Email"
+					},
+					"password": {
+						"type": "string",
+						"minLength": 1,
+						"title": "Password"
+					}
+				},
+				"type": "object",
+				"required": [
+					"email",
+					"password"
+				],
+				"title": "LoginRequest"
+			},
+			"Organization": {
+				"properties": {
+					"name": {
+						"type": "string",
+						"maxLength": 255,
+						"minLength": 1,
+						"title": "Name",
+						"description": "Organization name"
+					},
+					"address": {
+						"type": "string",
+						"maxLength": 255,
+						"minLength": 1,
+						"title": "Address",
+						"description": "Street address"
+					},
+					"city": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 100
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "City",
+						"description": "City name"
+					},
+					"zip": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 20
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Zip",
+						"description": "Zip code"
+					},
+					"state": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 50
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "State",
+						"description": "State name"
+					},
+					"phone": {
+						"type": "string",
+						"maxLength": 255,
+						"minLength": 1,
+						"title": "Phone",
+						"description": "Phone number"
+					},
+					"email": {
+						"type": "string",
+						"title": "Email",
+						"description": "Email address"
+					},
+					"active": {
+						"anyOf": [
+							{
+								"type": "boolean"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Active",
+						"description": "Active status",
+						"default": true
+					},
+					"org_id": {
+						"type": "integer",
+						"title": "Org Id"
+					},
+					"created_date": {
+						"type": "string",
+						"format": "date-time",
+						"title": "Created Date"
+					}
+				},
+				"type": "object",
+				"required": [
+					"name",
+					"address",
+					"phone",
+					"email",
+					"org_id",
+					"created_date"
+				],
+				"title": "Organization"
+			},
+			"OrganizationCreate": {
+				"properties": {
+					"name": {
+						"type": "string",
+						"maxLength": 255,
+						"minLength": 1,
+						"title": "Name",
+						"description": "Organization name"
+					},
+					"address": {
+						"type": "string",
+						"maxLength": 255,
+						"minLength": 1,
+						"title": "Address",
+						"description": "Street address"
+					},
+					"city": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 100
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "City",
+						"description": "City name"
+					},
+					"zip": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 20
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Zip",
+						"description": "Zip code"
+					},
+					"state": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 50
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "State",
+						"description": "State name"
+					},
+					"phone": {
+						"type": "string",
+						"maxLength": 255,
+						"minLength": 1,
+						"title": "Phone",
+						"description": "Phone number"
+					},
+					"email": {
+						"type": "string",
+						"title": "Email",
+						"description": "Email address"
+					},
+					"active": {
+						"anyOf": [
+							{
+								"type": "boolean"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Active",
+						"description": "Active status",
+						"default": true
+					}
+				},
+				"type": "object",
+				"required": [
+					"name",
+					"address",
+					"phone",
+					"email"
+				],
+				"title": "OrganizationCreate"
+			},
+			"OrganizationUpdate": {
+				"properties": {
+					"name": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 255,
+								"minLength": 1
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Name"
+					},
+					"address": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 255,
+								"minLength": 1
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Address"
+					},
+					"city": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 100
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "City"
+					},
+					"zip": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 20
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Zip"
+					},
+					"state": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 50
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "State"
+					},
+					"phone": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 255,
+								"minLength": 1
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Phone"
+					},
+					"email": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Email"
+					},
+					"active": {
+						"anyOf": [
+							{
+								"type": "boolean"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Active"
+					}
+				},
+				"type": "object",
+				"title": "OrganizationUpdate"
+			},
+			"Payment": {
+				"properties": {
+					"org_id": {
+						"type": "integer",
+						"title": "Org Id",
+						"description": "Organization ID"
+					},
+					"invoice_id": {
+						"type": "integer",
+						"title": "Invoice Id",
+						"description": "Invoice ID"
+					},
+					"payment_date": {
+						"type": "string",
+						"format": "date",
+						"title": "Payment Date",
+						"description": "Payment date"
+					},
+					"amount": {
+						"type": "string",
+						"title": "Amount",
+						"description": "Payment amount"
+					},
+					"method": {
+						"type": "string",
+						"maxLength": 20,
+						"minLength": 1,
+						"title": "Method",
+						"description": "Payment method"
+					},
+					"reference_no": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 100
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Reference No",
+						"description": "Payment reference number"
+					},
+					"notes": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 500
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Notes",
+						"description": "Payment notes"
+					},
+					"payment_id": {
+						"type": "integer",
+						"title": "Payment Id"
+					}
+				},
+				"type": "object",
+				"required": [
+					"org_id",
+					"invoice_id",
+					"payment_date",
+					"amount",
+					"method",
+					"payment_id"
+				],
+				"title": "Payment"
+			},
+			"PaymentCreate": {
+				"properties": {
+					"org_id": {
+						"type": "integer",
+						"title": "Org Id",
+						"description": "Organization ID"
+					},
+					"invoice_id": {
+						"type": "integer",
+						"title": "Invoice Id",
+						"description": "Invoice ID"
+					},
+					"payment_date": {
+						"type": "string",
+						"format": "date",
+						"title": "Payment Date",
+						"description": "Payment date"
+					},
+					"amount": {
+						"anyOf": [
+							{
+								"type": "number"
+							},
+							{
+								"type": "string"
+							}
+						],
+						"title": "Amount",
+						"description": "Payment amount"
+					},
+					"method": {
+						"type": "string",
+						"maxLength": 20,
+						"minLength": 1,
+						"title": "Method",
+						"description": "Payment method"
+					},
+					"reference_no": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 100
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Reference No",
+						"description": "Payment reference number"
+					},
+					"notes": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 500
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Notes",
+						"description": "Payment notes"
+					}
+				},
+				"type": "object",
+				"required": [
+					"org_id",
+					"invoice_id",
+					"payment_date",
+					"amount",
+					"method"
+				],
+				"title": "PaymentCreate"
+			},
+			"PaymentUpdate": {
+				"properties": {
+					"org_id": {
+						"anyOf": [
+							{
+								"type": "integer"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Org Id"
+					},
+					"invoice_id": {
+						"anyOf": [
+							{
+								"type": "integer"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Invoice Id"
+					},
+					"payment_date": {
+						"anyOf": [
+							{
+								"type": "string",
+								"format": "date"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Payment Date"
+					},
+					"amount": {
+						"anyOf": [
+							{
+								"type": "number"
+							},
+							{
+								"type": "string"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Amount"
+					},
+					"method": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 20,
+								"minLength": 1
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Method"
+					},
+					"reference_no": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 100
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Reference No"
+					},
+					"notes": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 500
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Notes"
+					}
+				},
+				"type": "object",
+				"title": "PaymentUpdate"
+			},
+			"Role": {
+				"properties": {
+					"org_id": {
+						"type": "integer",
+						"title": "Org Id",
+						"description": "Organization ID"
+					},
+					"name": {
+						"type": "string",
+						"maxLength": 50,
+						"minLength": 1,
+						"title": "Name",
+						"description": "Role name"
+					},
+					"role_id": {
+						"type": "integer",
+						"title": "Role Id"
+					}
+				},
+				"type": "object",
+				"required": [
+					"org_id",
+					"name",
+					"role_id"
+				],
+				"title": "Role"
+			},
+			"RoleCreate": {
+				"properties": {
+					"org_id": {
+						"type": "integer",
+						"title": "Org Id",
+						"description": "Organization ID"
+					},
+					"name": {
+						"type": "string",
+						"maxLength": 50,
+						"minLength": 1,
+						"title": "Name",
+						"description": "Role name"
+					}
+				},
+				"type": "object",
+				"required": [
+					"org_id",
+					"name"
+				],
+				"title": "RoleCreate"
+			},
+			"RoleUpdate": {
+				"properties": {
+					"org_id": {
+						"anyOf": [
+							{
+								"type": "integer"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Org Id"
+					},
+					"name": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 50,
+								"minLength": 1
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Name"
+					}
+				},
+				"type": "object",
+				"title": "RoleUpdate"
+			},
+			"Student": {
+				"properties": {
+					"org_id": {
+						"type": "integer",
+						"title": "Org Id",
+						"description": "Organization ID"
+					},
+					"first_name": {
+						"type": "string",
+						"maxLength": 100,
+						"minLength": 1,
+						"title": "First Name",
+						"description": "First name"
+					},
+					"last_name": {
+						"type": "string",
+						"maxLength": 100,
+						"minLength": 1,
+						"title": "Last Name",
+						"description": "Last name"
+					},
+					"dob": {
+						"anyOf": [
+							{
+								"type": "string",
+								"format": "date"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Dob",
+						"description": "Date of birth"
+					},
+					"guardian_name": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 150
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Guardian Name",
+						"description": "Guardian name"
+					},
+					"guardian_phone": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 20
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Guardian Phone",
+						"description": "Guardian phone"
+					},
+					"guardian_email": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 150
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Guardian Email",
+						"description": "Guardian email"
+					},
+					"notes": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Notes",
+						"description": "Additional notes"
+					},
+					"active": {
+						"anyOf": [
+							{
+								"type": "boolean"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Active",
+						"description": "Active status",
+						"default": true
+					},
+					"student_id": {
+						"type": "integer",
+						"title": "Student Id"
+					},
+					"created_at": {
+						"type": "string",
+						"format": "date-time",
+						"title": "Created At"
+					}
+				},
+				"type": "object",
+				"required": [
+					"org_id",
+					"first_name",
+					"last_name",
+					"student_id",
+					"created_at"
+				],
+				"title": "Student"
+			},
+			"StudentCreate": {
+				"properties": {
+					"org_id": {
+						"type": "integer",
+						"title": "Org Id",
+						"description": "Organization ID"
+					},
+					"first_name": {
+						"type": "string",
+						"maxLength": 100,
+						"minLength": 1,
+						"title": "First Name",
+						"description": "First name"
+					},
+					"last_name": {
+						"type": "string",
+						"maxLength": 100,
+						"minLength": 1,
+						"title": "Last Name",
+						"description": "Last name"
+					},
+					"dob": {
+						"anyOf": [
+							{
+								"type": "string",
+								"format": "date"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Dob",
+						"description": "Date of birth"
+					},
+					"guardian_name": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 150
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Guardian Name",
+						"description": "Guardian name"
+					},
+					"guardian_phone": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 20
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Guardian Phone",
+						"description": "Guardian phone"
+					},
+					"guardian_email": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 150
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Guardian Email",
+						"description": "Guardian email"
+					},
+					"notes": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Notes",
+						"description": "Additional notes"
+					},
+					"active": {
+						"anyOf": [
+							{
+								"type": "boolean"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Active",
+						"description": "Active status",
+						"default": true
+					}
+				},
+				"type": "object",
+				"required": [
+					"org_id",
+					"first_name",
+					"last_name"
+				],
+				"title": "StudentCreate"
+			},
+			"StudentUpdate": {
+				"properties": {
+					"org_id": {
+						"anyOf": [
+							{
+								"type": "integer"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Org Id"
+					},
+					"first_name": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 100,
+								"minLength": 1
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "First Name"
+					},
+					"last_name": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 100,
+								"minLength": 1
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Last Name"
+					},
+					"dob": {
+						"anyOf": [
+							{
+								"type": "string",
+								"format": "date"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Dob"
+					},
+					"guardian_name": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 150
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Guardian Name"
+					},
+					"guardian_phone": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 20
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Guardian Phone"
+					},
+					"guardian_email": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 150
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Guardian Email"
+					},
+					"notes": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Notes"
+					},
+					"active": {
+						"anyOf": [
+							{
+								"type": "boolean"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Active"
+					}
+				},
+				"type": "object",
+				"title": "StudentUpdate"
+			},
+			"TokenResponse": {
+				"properties": {
+					"access_token": {
+						"type": "string",
+						"title": "Access Token"
+					},
+					"token_type": {
+						"type": "string",
+						"title": "Token Type"
+					},
+					"expires_in": {
+						"type": "integer",
+						"title": "Expires In"
+					},
+					"user_id": {
+						"type": "integer",
+						"title": "User Id"
+					},
+					"email": {
+						"type": "string",
+						"title": "Email"
+					}
+				},
+				"type": "object",
+				"required": [
+					"access_token",
+					"token_type",
+					"expires_in",
+					"user_id",
+					"email"
+				],
+				"title": "TokenResponse"
+			},
+			"Trainer": {
+				"properties": {
+					"org_id": {
+						"type": "integer",
+						"title": "Org Id",
+						"description": "Organization ID"
+					},
+					"first_name": {
+						"type": "string",
+						"maxLength": 100,
+						"minLength": 1,
+						"title": "First Name",
+						"description": "First name"
+					},
+					"last_name": {
+						"type": "string",
+						"maxLength": 100,
+						"minLength": 1,
+						"title": "Last Name",
+						"description": "Last name"
+					},
+					"phone": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 20
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Phone",
+						"description": "Phone number"
+					},
+					"email": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 150
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Email",
+						"description": "Email address"
+					},
+					"hire_date": {
+						"anyOf": [
+							{
+								"type": "string",
+								"format": "date"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Hire Date",
+						"description": "Hire date"
+					},
+					"active": {
+						"anyOf": [
+							{
+								"type": "boolean"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Active",
+						"description": "Active status",
+						"default": true
+					},
+					"trainer_id": {
+						"type": "integer",
+						"title": "Trainer Id"
+					}
+				},
+				"type": "object",
+				"required": [
+					"org_id",
+					"first_name",
+					"last_name",
+					"trainer_id"
+				],
+				"title": "Trainer"
+			},
+			"TrainerCreate": {
+				"properties": {
+					"org_id": {
+						"type": "integer",
+						"title": "Org Id",
+						"description": "Organization ID"
+					},
+					"first_name": {
+						"type": "string",
+						"maxLength": 100,
+						"minLength": 1,
+						"title": "First Name",
+						"description": "First name"
+					},
+					"last_name": {
+						"type": "string",
+						"maxLength": 100,
+						"minLength": 1,
+						"title": "Last Name",
+						"description": "Last name"
+					},
+					"phone": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 20
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Phone",
+						"description": "Phone number"
+					},
+					"email": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 150
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Email",
+						"description": "Email address"
+					},
+					"hire_date": {
+						"anyOf": [
+							{
+								"type": "string",
+								"format": "date"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Hire Date",
+						"description": "Hire date"
+					},
+					"active": {
+						"anyOf": [
+							{
+								"type": "boolean"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Active",
+						"description": "Active status",
+						"default": true
+					}
+				},
+				"type": "object",
+				"required": [
+					"org_id",
+					"first_name",
+					"last_name"
+				],
+				"title": "TrainerCreate"
+			},
+			"TrainerUpdate": {
+				"properties": {
+					"org_id": {
+						"anyOf": [
+							{
+								"type": "integer"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Org Id"
+					},
+					"first_name": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 100,
+								"minLength": 1
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "First Name"
+					},
+					"last_name": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 100,
+								"minLength": 1
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Last Name"
+					},
+					"phone": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 20
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Phone"
+					},
+					"email": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 150
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Email"
+					},
+					"hire_date": {
+						"anyOf": [
+							{
+								"type": "string",
+								"format": "date"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Hire Date"
+					},
+					"active": {
+						"anyOf": [
+							{
+								"type": "boolean"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Active"
+					}
+				},
+				"type": "object",
+				"title": "TrainerUpdate"
+			},
+			"User": {
+				"properties": {
+					"org_id": {
+						"type": "integer",
+						"title": "Org Id"
+					},
+					"role_id": {
+						"type": "integer",
+						"title": "Role Id"
+					},
+					"email": {
+						"type": "string",
+						"maxLength": 150,
+						"minLength": 1,
+						"title": "Email"
+					},
+					"phone": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 20
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Phone"
+					},
+					"active": {
+						"type": "boolean",
+						"title": "Active"
+					},
+					"user_id": {
+						"type": "integer",
+						"title": "User Id"
+					},
+					"created_at": {
+						"type": "string",
+						"format": "date-time",
+						"title": "Created At"
+					},
+					"last_login_at": {
+						"anyOf": [
+							{
+								"type": "string",
+								"format": "date-time"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Last Login At"
+					}
+				},
+				"type": "object",
+				"required": [
+					"org_id",
+					"role_id",
+					"email",
+					"active",
+					"user_id",
+					"created_at"
+				],
+				"title": "User"
+			},
+			"UserCreate": {
+				"properties": {
+					"org_id": {
+						"type": "integer",
+						"title": "Org Id"
+					},
+					"role_id": {
+						"type": "integer",
+						"title": "Role Id"
+					},
+					"email": {
+						"type": "string",
+						"maxLength": 150,
+						"minLength": 1,
+						"title": "Email"
+					},
+					"phone": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 20
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Phone"
+					},
+					"active": {
+						"type": "boolean",
+						"title": "Active"
+					},
+					"password_hash": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 500
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Password Hash"
+					}
+				},
+				"type": "object",
+				"required": [
+					"org_id",
+					"role_id",
+					"email",
+					"active"
+				],
+				"title": "UserCreate"
+			},
+			"UserUpdate": {
+				"properties": {
+					"org_id": {
+						"anyOf": [
+							{
+								"type": "integer"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Org Id"
+					},
+					"role_id": {
+						"anyOf": [
+							{
+								"type": "integer"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Role Id"
+					},
+					"email": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 150,
+								"minLength": 1
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Email"
+					},
+					"phone": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 20
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Phone"
+					},
+					"password_hash": {
+						"anyOf": [
+							{
+								"type": "string",
+								"maxLength": 500
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Password Hash"
+					},
+					"active": {
+						"anyOf": [
+							{
+								"type": "boolean"
+							},
+							{
+								"type": "null"
+							}
+						],
+						"title": "Active"
+					}
+				},
+				"type": "object",
+				"title": "UserUpdate"
+			},
+			"ValidationError": {
+				"properties": {
+					"loc": {
+						"items": {
+							"anyOf": [
+								{
+									"type": "string"
+								},
+								{
+									"type": "integer"
+								}
+							]
+						},
+						"type": "array",
+						"title": "Location"
+					},
+					"msg": {
+						"type": "string",
+						"title": "Message"
+					},
+					"type": {
+						"type": "string",
+						"title": "Error Type"
+					}
+				},
+				"type": "object",
+				"required": [
+					"loc",
+					"msg",
+					"type"
+				],
+				"title": "ValidationError"
+			}
+		},
+		"securitySchemes": {
+			"Bearer": {
+				"type": "http",
+				"scheme": "bearer",
+				"bearerFormat": "JWT",
+				"description": "Enter JWT token obtained from /users/authenticate/login endpoint"
+			}
+		}
+	},
+	"security": [
+		{
+			"Bearer": []
+		}
+	]
+}

@@ -1,0 +1,179 @@
+.batch-form-container {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.batch-form-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+}
+
+.batch-form-card h2 {
+  color: #333;
+  font-size: 28px;
+  margin: 0 0 20px 0;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 15px;
+}
+
+.batch-form-error {
+  background: #f8d7da;
+  color: #721c24;
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  border-left: 4px solid #721c24;
+}
+
+.batch-form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 25px;
+  margin-bottom: 20px;
+}
+
+.batch-form-row:last-child {
+  margin-bottom: 0;
+}
+
+.batch-form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.batch-form-group label {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.batch-form-group label > span {
+  color: #dc3545;
+}
+
+.batch-form-input {
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  font-family: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.batch-form-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+.batch-form-input.error {
+  border-color: #dc3545;
+  background-color: #fff5f5;
+}
+
+.batch-form-input.error:focus {
+  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.25);
+}
+
+.batch-form-input:disabled {
+  background-color: #e9ecef;
+  color: #666;
+  cursor: not-allowed;
+}
+
+.batch-form-error-msg {
+  color: #dc3545;
+  font-size: 12px;
+  margin-top: 5px;
+  font-weight: 500;
+}
+
+.batch-form-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.batch-form-actions button {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.batch-form-actions .btn {
+  transition: all 0.2s;
+}
+
+.batch-form-actions .btn-primary {
+  background: #007bff;
+  color: white;
+}
+
+.batch-form-actions .btn-primary:hover:not(:disabled) {
+  background: #0056b3;
+}
+
+.batch-form-actions .btn-primary:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.batch-form-actions .btn-secondary {
+  background: #6c757d;
+  color: white;
+}
+
+.batch-form-actions .btn-secondary:hover:not(:disabled) {
+  background: #5a6268;
+}
+
+.batch-form-actions .btn-secondary:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.batch-form-loading {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  .batch-form-container {
+    padding: 15px;
+  }
+
+  .batch-form-card {
+    padding: 20px;
+  }
+
+  .batch-form-card h2 {
+    font-size: 24px;
+  }
+
+  .batch-form-row {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .batch-form-actions {
+    flex-direction: column;
+  }
+
+  .batch-form-actions button {
+    width: 100%;
+  }
+}

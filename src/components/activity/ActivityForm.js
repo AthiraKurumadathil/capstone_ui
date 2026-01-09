@@ -132,10 +132,10 @@ const ActivityForm = () => {
 
     try {
       const submitData = {
-        name: formData.name,
-        org_id: parseInt(formData.org_id),
-        category_id: parseInt(formData.category_id),
-        description: formData.description || undefined,
+        name: formData.name.trim(),
+        org_id: parseInt(formData.org_id, 10),
+        category_id: parseInt(formData.category_id, 10),
+        description: formData.description ? formData.description.trim() : undefined,
         default_fee: formData.default_fee ? parseFloat(formData.default_fee) : undefined,
         active: formData.active,
       };

@@ -1,0 +1,179 @@
+.batchsession-detail-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.batchsession-detail-card {
+  background: white;
+  border-radius: 12px;
+  padding: 40px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.batchsession-detail-card h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #333;
+  margin: 0 0 30px 0;
+}
+
+.batchsession-detail-loading {
+  text-align: center;
+  padding: 40px;
+  font-size: 16px;
+  color: #666;
+}
+
+.batchsession-detail-error {
+  padding: 15px;
+  background-color: #fff5f5;
+  border-left: 4px solid #e74c3c;
+  border-radius: 4px;
+  color: #c0392b;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.batchsession-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+.batchsession-detail-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.batchsession-detail-item label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.batchsession-detail-item p {
+  margin: 0;
+  font-size: 16px;
+  color: #333;
+  font-weight: 500;
+}
+
+.batchsession-detail-item .batchsession-status {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  width: fit-content;
+}
+
+.batchsession-status.scheduled {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.batchsession-status.completed {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.batchsession-status.cancelled {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.batchsession-status.pending {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.batchsession-detail-actions {
+  display: flex;
+  gap: 12px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.batchsession-detail-actions .btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.batchsession-detail-actions .btn-primary {
+  background-color: #667eea;
+  color: white;
+}
+
+.batchsession-detail-actions .btn-primary:hover {
+  background-color: #5568d3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.batchsession-detail-actions .btn-secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.batchsession-detail-actions .btn-secondary:hover {
+  background-color: #5a6268;
+}
+
+.batchsession-detail-back-btn {
+  margin-bottom: 20px;
+  background-color: #f5f5f5;
+  color: #333;
+  padding: 8px 16px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.batchsession-detail-back-btn:hover {
+  background-color: #e0e0e0;
+}
+
+.batchsession-detail-back-link {
+  display: inline-block;
+  margin-bottom: 20px;
+  font-size: 14px;
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.batchsession-detail-back-link:hover {
+  color: #5568d3;
+}
+
+@media (max-width: 768px) {
+  .batchsession-detail-card {
+    padding: 20px;
+  }
+
+  .batchsession-detail-grid {
+    gap: 15px;
+  }
+
+  .batchsession-detail-actions {
+    flex-direction: column;
+  }
+
+  .batchsession-detail-actions .btn {
+    width: 100%;
+  }
+}

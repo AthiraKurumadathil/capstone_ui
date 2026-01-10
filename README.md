@@ -38,15 +38,41 @@ capstone_ui/
 
 ## Installation
 
-1. Install dependencies:
+### Local Setup Instructions
+
+1. **Clone the project from GitHub:**
 ```bash
-npm install
+git clone https://github.com/AthiraKurumadathil/capstone_ui.git
+cd capstone_ui
 ```
 
-2. Create a `.env` file in the root directory:
+2. **Download and Install Node.js:**
+   - Visit [nodejs.org](https://nodejs.org/)
+   - Download and install the latest LTS version
+   - Verify installation:
+   ```bash
+   node --version
+   npm --version
+   ```
+
+3. **Install dependencies:**
+   - Open terminal/command prompt in the project directory
+   ```bash
+   npm install
+   ```
+
+4. **Run the application:**
+```bash
+npm start
 ```
-REACT_APP_API_URL=http://localhost:3001/api
-```
+
+The app will open at `http://localhost:3000`
+
+5. **Configure Environment Variables (if needed):**
+   - Create a `.env` file in the root directory:
+   ```
+   REACT_APP_API_URL=http://localhost:3001/api
+   ```
 
 ## Running the Application
 

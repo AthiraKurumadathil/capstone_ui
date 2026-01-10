@@ -36,7 +36,7 @@ const BatchDetail = () => {
     return (
       <div className="batch-detail-error">
         <p>{error}</p>
-        <button className="btn-back" onClick={() => navigate('/batches')}>
+        <button className="btn btn-primary" onClick={() => navigate('/batches')}>
           Back to Batches
         </button>
       </div>
@@ -47,7 +47,7 @@ const BatchDetail = () => {
     return (
       <div className="batch-detail-error">
         <p>Batch record not found</p>
-        <button className="btn-back" onClick={() => navigate('/batches')}>
+        <button className="btn btn-primary" onClick={() => navigate('/batches')}>
           Back to Batches
         </button>
       </div>
@@ -60,13 +60,13 @@ const BatchDetail = () => {
         <h2>Batch Details</h2>
         <div className="batch-detail-actions">
           <button 
-            className="btn-edit"
+            className="btn btn-warning"
             onClick={() => navigate(`/batches/edit/${batchId}`)}
           >
             Edit
           </button>
           <button 
-            className="btn-back"
+            className="btn btn-secondary"
             onClick={() => navigate('/batches')}
           >
             Back

@@ -11,19 +11,22 @@
 }
 
 .org-list-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  display: block;
   margin-bottom: 30px;
-  flex-wrap: wrap;
-  gap: 20px;
+  position: relative;
 }
 
 .org-list-header h2 {
   font-size: 28px;
   font-weight: 700;
-  color: #333;
-  margin: 0;
+  color: white;
+  margin: 0 0 20px 0;
+}
+
+.org-list-header .btn {
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 
 .org-empty {
@@ -94,7 +97,7 @@
 
 .org-name {
   font-weight: 600;
-  color: #333;
+  color: white;
 }
 
 .org-status {

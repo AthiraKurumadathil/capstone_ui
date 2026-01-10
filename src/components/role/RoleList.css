@@ -7,18 +7,23 @@
 }
 
 .role-list-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  display: block;
   margin-bottom: 30px;
   padding-bottom: 20px;
   border-bottom: 2px solid #ddd;
+  position: relative;
 }
 
 .role-list-header h1 {
-  margin: 0;
-  color: #333;
+  margin: 0 0 20px 0;
+  color: white;
   font-size: 28px;
+}
+
+.role-list-header .btn {
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 
 .role-list-error {

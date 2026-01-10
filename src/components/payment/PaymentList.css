@@ -12,19 +12,21 @@
 }
 
 .payment-list-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  display: block;
   margin-bottom: 30px;
+  position: relative;
 }
 
 .payment-list-header h2 {
-  color: #333;
+  color: white;
   font-size: 28px;
-  margin: 0;
+  margin: 0 0 20px 0;
 }
 
 .payment-list-header .btn-primary {
+  position: absolute;
+  right: 0;
+  top: 0;
   padding: 12px 24px;
   font-size: 16px;
   border: none;

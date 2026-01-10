@@ -1,0 +1,222 @@
+.feeplan-detail-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.feeplan-detail-card {
+  background: white;
+  border-radius: 12px;
+  padding: 40px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.feeplan-detail-card h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #333;
+  margin: 0 0 30px 0;
+}
+
+.feeplan-detail-loading {
+  text-align: center;
+  padding: 40px;
+  font-size: 16px;
+  color: #666;
+}
+
+.feeplan-detail-error {
+  padding: 15px;
+  background-color: #fff5f5;
+  border-left: 4px solid #e74c3c;
+  border-radius: 4px;
+  color: #c0392b;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.feeplan-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+.feeplan-detail-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.feeplan-detail-item label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.feeplan-detail-item p {
+  margin: 0;
+  font-size: 16px;
+  color: #333;
+  font-weight: 500;
+}
+
+.feeplan-status {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  width: fit-content;
+}
+
+.feeplan-status.active {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.feeplan-status.inactive {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.feeplan-detail-actions {
+  display: flex;
+  gap: 12px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.feeplan-detail-actions .btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.feeplan-detail-actions .btn-primary {
+  background-color: #667eea;
+  color: white;
+}
+
+.feeplan-detail-actions .btn-primary:hover {
+  background-color: #5568d3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.feeplan-detail-actions .btn-danger {
+  background-color: #dc3545;
+  color: white;
+}
+
+.feeplan-detail-actions .btn-danger:hover {
+  background-color: #c82333;
+}
+
+.feeplan-detail-back-btn {
+  margin-bottom: 20px;
+  background-color: #f5f5f5;
+  color: #333;
+  padding: 8px 16px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.feeplan-detail-back-btn:hover {
+  background-color: #e0e0e0;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  max-width: 400px;
+  width: 90%;
+}
+
+.modal-content h3 {
+  margin: 0 0 15px 0;
+  font-size: 20px;
+  color: #333;
+}
+
+.modal-content p {
+  color: #666;
+  margin-bottom: 25px;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: #5a6268;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-danger:hover:not(:disabled) {
+  background-color: #c82333;
+}
+
+@media (max-width: 768px) {
+  .feeplan-detail-card {
+    padding: 20px;
+  }
+
+  .feeplan-detail-grid {
+    gap: 15px;
+  }
+
+  .feeplan-detail-actions {
+    flex-direction: column;
+  }
+
+  .feeplan-detail-actions .btn {
+    width: 100%;
+  }
+}

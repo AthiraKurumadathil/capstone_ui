@@ -1,0 +1,238 @@
+.user-form-container {
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.user-form-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+}
+
+.user-form-header {
+  margin-bottom: 25px;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 15px;
+}
+
+.user-form-header h1 {
+  margin: 0;
+  color: #333;
+  font-size: 24px;
+}
+
+.user-form-header p {
+  margin: 5px 0 0 0;
+  color: #999;
+  font-size: 14px;
+}
+
+.user-form-group {
+  margin-bottom: 20px;
+}
+
+.user-form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #333;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.user-form-group label span.required {
+  color: #e74c3c;
+  margin-left: 2px;
+}
+
+.user-form-group input,
+.user-form-group select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: inherit;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
+}
+
+.user-form-group input:focus,
+.user-form-group select:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.user-form-group input[type="checkbox"] {
+  width: auto;
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+.user-form-checkbox {
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.user-form-checkbox label {
+  margin: 0;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.user-form-checkbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #667eea;
+}
+
+.user-error {
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  color: #721c24;
+  padding: 12px 15px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.user-error-item {
+  list-style: none;
+  padding: 0;
+  margin: 5px 0 0 0;
+}
+
+.user-error-item li {
+  padding: 5px 0;
+  font-size: 13px;
+}
+
+.user-form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 25px;
+  padding-top: 15px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.user-form-actions .btn {
+  flex: 1;
+  padding: 12px 20px;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.user-form-actions .btn.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.user-form-actions .btn.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.user-form-actions .btn.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.user-form-actions .btn.btn-secondary {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.user-form-actions .btn.btn-secondary:hover {
+  background-color: #e0e0e0;
+}
+
+.user-form-loading {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+  font-size: 16px;
+}
+
+/* Helper text */
+.user-form-hint {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: #999;
+}
+
+/* Validation states */
+.user-form-group input:invalid:not(:placeholder-shown),
+.user-form-group input.error {
+  border-color: #e74c3c;
+  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+}
+
+.user-form-group .error-message {
+  color: #e74c3c;
+  font-size: 12px;
+  margin-top: 4px;
+  display: none;
+}
+
+.user-form-group input:invalid:not(:placeholder-shown) ~ .error-message,
+.user-form-group input.error ~ .error-message {
+  display: block;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .user-form-container {
+    padding: 15px;
+  }
+
+  .user-form-card {
+    padding: 20px;
+  }
+
+  .user-form-header h1 {
+    font-size: 20px;
+  }
+
+  .user-form-actions {
+    flex-direction: column;
+  }
+
+  .user-form-actions .btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .user-form-container {
+    padding: 10px;
+  }
+
+  .user-form-card {
+    padding: 15px;
+  }
+
+  .user-form-header h1 {
+    font-size: 18px;
+  }
+
+  .user-form-group {
+    margin-bottom: 15px;
+  }
+
+  .user-form-actions {
+    margin-top: 20px;
+  }
+}

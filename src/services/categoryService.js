@@ -95,4 +95,81 @@ export const getCategory = async (categoryId) => {
   }
 };
 
+// Create category
+export const createCategory = async (categoryData) => {
+  try {
+    console.log('=== CATEGORY CREATE ===');
+    console.log('Data being sent:', JSON.stringify(categoryData, null, 2));
+    
+    const response = await apiClient.post('/categories', categoryData);
+    
+    console.log('Create response:', response.data);
+    const category = response.data;
+    return {
+      ...category,
+      id: category.category_id || category.id || category.categoryId
+    };
+  } catch (error) {
+    console.error('=== ERROR CREATING CATEGORY ===');
+    console.error('Full error object:', error);
+    console.error('Error response:', error.response?.data);
+    
+    const errorMsg = error.response?.data?.detail || error.response?.data?.message || error.message || 'Failed to create category';
+    throw error.response?.data || { message: errorMsg };
+  }
+};
+
+// Update category
+export const updateCategory = async (categoryId, categoryData) => {
+  try {
+    const numericId = parseInt(categoryId, 10);
+    const dataToSend = {
+      name: categoryData.name,
+      active: categoryData.active,
+    };
+    
+    console.log('=== CATEGORY UPDATE ===');
+    console.log('Category ID:', numericId);
+    console.log('URL: /categories/' + numericId);
+    console.log('Data being sent:', JSON.stringify(dataToSend, null, 2));
+    
+    const response = await apiClient.put(`/categories/${numericId}`, dataToSend);
+    
+    console.log('Update response:', response.data);
+    const category = response.data;
+    return {
+      ...category,
+      id: category.category_id || category.id || category.categoryId
+    };
+  } catch (error) {
+    console.error('=== ERROR UPDATING CATEGORY ===');
+    console.error('Full error object:', error);
+    console.error('Error response:', error.response?.data);
+    
+    const errorMsg = error.response?.data?.detail || error.response?.data?.message || error.message || 'Failed to update category';
+    throw error.response?.data || { message: errorMsg };
+  }
+};
+
+// Delete category
+export const deleteCategory = async (categoryId) => {
+  try {
+    const numericId = parseInt(categoryId, 10);
+    console.log('=== CATEGORY DELETE ===');
+    console.log('Category ID:', numericId);
+    
+    const response = await apiClient.delete(`/categories/${numericId}`);
+    
+    console.log('Delete response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('=== ERROR DELETING CATEGORY ===');
+    console.error('Full error object:', error);
+    console.error('Error response:', error.response?.data);
+    
+    const errorMsg = error.response?.data?.detail || error.response?.data?.message || error.message || 'Failed to delete category';
+    throw error.response?.data || { message: errorMsg };
+  }
+};
+
 export default apiClient;

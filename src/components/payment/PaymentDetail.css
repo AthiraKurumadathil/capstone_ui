@@ -1,0 +1,234 @@
+.payment-detail-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+}
+
+.payment-detail-back-btn {
+  margin-bottom: 20px;
+  padding: 8px 16px;
+  font-size: 14px;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.payment-detail-back-btn:hover {
+  background-color: #5a6268;
+}
+
+.payment-detail-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  padding: 30px;
+}
+
+.payment-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.payment-detail-header h2 {
+  color: #333;
+  font-size: 28px;
+  margin: 0;
+}
+
+.payment-detail-method {
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  background-color: #e7f3ff;
+  color: #0056b3;
+}
+
+.payment-detail-error {
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 6px;
+  color: #721c24;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.payment-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 24px;
+  margin-bottom: 30px;
+}
+
+.payment-detail-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.payment-detail-label {
+  font-weight: 600;
+  color: #666;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.payment-detail-value {
+  color: #333;
+  font-size: 16px;
+  word-break: break-word;
+}
+
+.payment-detail-value.payment-amount {
+  font-weight: 600;
+  color: #28a745;
+  font-size: 18px;
+}
+
+.payment-loading {
+  text-align: center;
+  color: #666;
+  padding: 40px;
+  font-size: 16px;
+}
+
+.payment-detail-actions {
+  display: flex;
+  gap: 12px;
+  padding-top: 20px;
+  border-top: 2px solid #f0f0f0;
+}
+
+.payment-detail-actions .btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.payment-detail-actions .btn-warning {
+  background-color: #ffc107;
+  color: #333;
+}
+
+.payment-detail-actions .btn-warning:hover {
+  background-color: #e0a800;
+}
+
+.payment-detail-actions .btn-danger {
+  background-color: #dc3545;
+  color: white;
+}
+
+.payment-detail-actions .btn-danger:hover {
+  background-color: #c82333;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
+  max-width: 400px;
+  text-align: center;
+}
+
+.modal-content h3 {
+  color: #333;
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+.modal-content p {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 30px;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.modal-buttons .btn {
+  padding: 10px 20px;
+  font-size: 14px;
+  flex: 1;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.modal-buttons .btn-secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.modal-buttons .btn-secondary:hover {
+  background-color: #5a6268;
+}
+
+.modal-buttons .btn-danger {
+  background-color: #dc3545;
+  color: white;
+}
+
+.modal-buttons .btn-danger:hover {
+  background-color: #c82333;
+}
+
+@media (max-width: 600px) {
+  .payment-detail-card {
+    padding: 20px;
+  }
+
+  .payment-detail-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .payment-detail-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .payment-detail-actions {
+    flex-direction: column;
+  }
+
+  .payment-detail-actions .btn {
+    width: 100%;
+  }
+}

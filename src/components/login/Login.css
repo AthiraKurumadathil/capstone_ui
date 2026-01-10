@@ -138,3 +138,21 @@
 .login-footer a:hover {
   color: #764ba2;
 }
+
+.login-forgot-password {
+  text-align: center;
+  font-size: 14px;
+  margin-top: 15px;
+}
+
+.login-forgot-password a {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.login-forgot-password a:hover {
+  color: #764ba2;
+  text-decoration: underline;
+}

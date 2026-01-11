@@ -122,10 +122,6 @@ const Login = () => {
             {isLoading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
-
-        <p className="login-footer">
-          Don't have an account? <a href="#signup">Sign up here</a>
-        </p>
         
         <p className="login-forgot-password">
           <a href="/forgot-password">Forgot Password?</a>

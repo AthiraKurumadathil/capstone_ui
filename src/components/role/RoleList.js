@@ -1,20 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAllRoles, deleteRole } from '../../services/roleService';
-import { getAllOrganizations } from '../../services/organizationService';
 import './RoleList.css';
 
 const RoleList = () => {
   const navigate = useNavigate();
   const [roles, setRoles] = useState([]);
-  const [organizations, setOrganizations] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [deleteConfirm, setDeleteConfirm] = useState(null);
 
   useEffect(() => {
     fetchRoles();
-    fetchOrganizations();
   }, []);
 
   const fetchRoles = async () => {
@@ -29,20 +26,6 @@ const RoleList = () => {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const fetchOrganizations = async () => {
-    try {
-      const data = await getAllOrganizations();
-      setOrganizations(Array.isArray(data) ? data : []);
-    } catch (err) {
-      console.error('Error fetching organizations:', err);
-    }
-  };
-
-  const getOrgName = (orgId) => {
-    const org = organizations.find(o => o.id === orgId);
-    return org ? org.name : `Organization ${orgId}`;
   };
 
   const handleDelete = async () => {
@@ -92,7 +75,6 @@ const RoleList = () => {
             <tr>
               <th>Role ID</th>
               <th>Name</th>
-              <th>Organization</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -101,7 +83,6 @@ const RoleList = () => {
               <tr key={role.id}>
                 <td>#{role.id}</td>
                 <td>{role.name}</td>
-                <td>{getOrgName(role.org_id)}</td>
                 <td className="role-actions">
                   <button 
                     className="btn btn-sm btn-info"

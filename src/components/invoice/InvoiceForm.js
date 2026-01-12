@@ -7,6 +7,12 @@ import './InvoiceForm.css';
 const InvoiceForm = () => {
   const { invoiceId } = useParams();
   const navigate = useNavigate();
+  
+  // Get user and org info
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const isOrgAdmin = user.role_name?.toLowerCase().trim() === 'admin';
+  const userOrgId = parseInt(user.org_id) || null;
+  
   const [organizations, setOrganizations] = useState([]);
   const [enrollments, setEnrollments] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -30,7 +36,16 @@ const InvoiceForm = () => {
   const fetchOrganizations = async () => {
     try {
       const data = await getAllOrganizations();
-      setOrganizations(Array.isArray(data) ? data : []);
+      let orgList = Array.isArray(data) ? data : [];
+      
+      // If user is org admin, show only their organization
+      if (isOrgAdmin && userOrgId) {
+        orgList = orgList.filter(org => org.id === userOrgId);
+        // Auto-select user's organization
+        setForm(prev => ({ ...prev, org_id: userOrgId.toString() }));
+      }
+      
+      setOrganizations(orgList);
     } catch (err) {
       console.error('Error fetching organizations:', err);
       setError('Failed to load organizations');

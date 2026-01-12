@@ -9,6 +9,11 @@ const ActivityList = () => {
   const [error, setError] = useState('');
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const navigate = useNavigate();
+  
+  // Get user and org info
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const isOrgAdmin = user.role_name?.toLowerCase().trim() === 'admin';
+  const userOrgId = parseInt(user.org_id) || null;
 
   useEffect(() => {
     fetchActivities();
@@ -18,7 +23,14 @@ const ActivityList = () => {
     try {
       setIsLoading(true);
       const data = await getAllActivities();
-      setActivities(Array.isArray(data) ? data : []);
+      let filteredData = Array.isArray(data) ? data : [];
+      
+      // If user is org admin, filter by their organization
+      if (isOrgAdmin && userOrgId) {
+        filteredData = filteredData.filter(activity => activity.org_id === userOrgId);
+      }
+      
+      setActivities(filteredData);
       setError('');
     } catch (err) {
       const errorMsg = err.message || 'Failed to load activities';

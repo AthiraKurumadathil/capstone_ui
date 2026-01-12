@@ -8,11 +8,18 @@ const Home = () => {
   const location = useLocation();
   const user = JSON.parse(localStorage.getItem('user') || '{}');
   const roleId = parseInt(user.role_id) || 0;
-  const isAdmin = roleId === 1; // Admin has role_id = 1
+  const roleName = user.role_name || '';
+  
+  // Determine role type
+  const isSuperAdmin = roleName.toLowerCase().trim() === 'super admin';
+  const isOrgAdmin = roleName.toLowerCase().trim() === 'admin';
+  const showAdminMenus = isSuperAdmin || isOrgAdmin;
+  const showOrganizationMenu = isSuperAdmin; // Only Super Admin can see Organizations
 
   console.log('Home component mounted, user data:', user);
   console.log('Token:', localStorage.getItem('token'));
-  console.log('Role ID value:', user.role_id, 'Parsed as int:', roleId, 'Is Admin:', isAdmin);
+  console.log('Role ID:', user.role_id, 'Role Name:', roleName);
+  console.log('Is Super Admin:', isSuperAdmin, 'Is Org Admin:', isOrgAdmin);
 
   const handleLogout = () => {
     logout();
@@ -61,8 +68,8 @@ const Home = () => {
               Home
             </button>
 
-            {/* Admin Only Menu Items */}
-            {isAdmin && (
+            {/* Admin Menu Items - Super Admin sees all, Organization Admin sees all except Organizations */}
+            {showAdminMenus && (
               <>
                 <button 
                   className={`sidebar-link ${isCategoryPage ? 'active' : ''}`}
@@ -88,12 +95,15 @@ const Home = () => {
                 >
                   Users
                 </button>
-                <button 
-                  className={`sidebar-link ${isOrgPage ? 'active' : ''}`}
-                  onClick={() => navigate('/organizations')}
-                >
-                  Organizations
-                </button>
+                {/* Organizations menu - only for Super Admin */}
+                {showOrganizationMenu && (
+                  <button 
+                    className={`sidebar-link ${isOrgPage ? 'active' : ''}`}
+                    onClick={() => navigate('/organizations')}
+                  >
+                    Organizations
+                  </button>
+                )}
                 <button 
                   className={`sidebar-link ${isActivityPage ? 'active' : ''}`}
                   onClick={() => navigate('/activities')}

@@ -527,6 +527,10 @@ function App() {
           }
         />
         <Route
+          path="/users/change-password/:email"
+          element={<ChangePassword />}
+        />
+        <Route
           path="/users/change-password"
           element={<ChangePassword />}
         />

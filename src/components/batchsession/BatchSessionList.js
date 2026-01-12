@@ -11,6 +11,11 @@ const BatchSessionList = () => {
   const [error, setError] = useState('');
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const navigate = useNavigate();
+  
+  // Get user and org info
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const isOrgAdmin = user.role_name?.toLowerCase().trim() === 'admin';
+  const userOrgId = parseInt(user.org_id) || null;
 
   useEffect(() => {
     fetchSessions();
@@ -21,7 +26,13 @@ const BatchSessionList = () => {
     try {
       setIsLoading(true);
       const data = await getAllBatchSessions();
-      const sessionsArray = Array.isArray(data) ? data : data?.data || [];
+      let sessionsArray = Array.isArray(data) ? data : data?.data || [];
+      
+      // If user is org admin, filter by their organization
+      if (isOrgAdmin && userOrgId) {
+        sessionsArray = sessionsArray.filter(session => session.org_id === userOrgId);
+      }
+      
       console.log('Fetched sessions:', sessionsArray);
       setSessions(sessionsArray);
       setError('');

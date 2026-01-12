@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { changePassword } from '../../services/userService';
 import './ChangePassword.css';
 
 const ChangePassword = () => {
   const navigate = useNavigate();
+  const { email: paramEmail } = useParams();
+  const [searchParams] = useSearchParams();
+  const queryEmail = searchParams.get('email');
   const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const email = paramEmail || queryEmail || user.email;
+
+  console.log('Emal for password change:', email);
   const [form, setForm] = useState({
     oldPassword: '',
     newPassword: '',
@@ -71,7 +77,7 @@ const ChangePassword = () => {
       return;
     }
 
-    if (!user || !user.email) {
+    if (!email) {
       setError('Unable to determine user email. Please log in again.');
       return;
     }
@@ -80,7 +86,7 @@ const ChangePassword = () => {
       setIsLoading(true);
       setError('');
       
-      await changePassword(user.email, form.oldPassword, form.newPassword);
+      await changePassword(email, form.oldPassword, form.newPassword);
       
       setSuccess('Password changed successfully!');
       setForm({
@@ -89,9 +95,11 @@ const ChangePassword = () => {
         confirmPassword: ''
       });
 
-      // Redirect after 2 seconds
+      // Clear authentication data and redirect to login after 2 seconds
       setTimeout(() => {
-        navigate('/home');
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        navigate('/', { replace: true });
       }, 2000);
     } catch (err) {
       const errorMsg = err.message || 'Failed to change password';

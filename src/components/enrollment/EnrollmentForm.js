@@ -9,6 +9,12 @@ import './EnrollmentForm.css';
 const EnrollmentForm = () => {
   const { enrollmentId } = useParams();
   const navigate = useNavigate();
+  
+  // Get user and org info
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const isOrgAdmin = user.role_name?.toLowerCase().trim() === 'admin';
+  const userOrgId = parseInt(user.org_id) || null;
+  
   const [form, setForm] = useState({
     org_id: '',
     batch_id: '',
@@ -53,7 +59,16 @@ const EnrollmentForm = () => {
   const fetchOrganizations = async () => {
     try {
       const data = await getAllOrganizations();
-      setOrganizations(Array.isArray(data) ? data : []);
+      let orgList = Array.isArray(data) ? data : [];
+      
+      // If user is org admin, show only their organization
+      if (isOrgAdmin && userOrgId) {
+        orgList = orgList.filter(org => org.id === userOrgId);
+        // Auto-select user's organization
+        setForm(prev => ({ ...prev, org_id: userOrgId.toString() }));
+      }
+      
+      setOrganizations(orgList);
     } catch (err) {
       console.error('Error fetching organizations:', err);
     }
@@ -62,7 +77,14 @@ const EnrollmentForm = () => {
   const fetchBatches = async () => {
     try {
       const data = await getAllBatches();
-      setBatches(Array.isArray(data) ? data : []);
+      let batchList = Array.isArray(data) ? data : [];
+      
+      // If user is org admin, show only their organization's batches
+      if (isOrgAdmin && userOrgId) {
+        batchList = batchList.filter(batch => batch.org_id === userOrgId);
+      }
+      
+      setBatches(batchList);
     } catch (err) {
       console.error('Error fetching batches:', err);
     }
@@ -71,7 +93,14 @@ const EnrollmentForm = () => {
   const fetchStudents = async () => {
     try {
       const data = await getAllStudents();
-      setStudents(Array.isArray(data) ? data : []);
+      let studentList = Array.isArray(data) ? data : [];
+      
+      // If user is org admin, show only their organization's students
+      if (isOrgAdmin && userOrgId) {
+        studentList = studentList.filter(student => student.org_id === userOrgId);
+      }
+      
+      setStudents(studentList);
     } catch (err) {
       console.error('Error fetching students:', err);
     }

@@ -7,6 +7,13 @@ import './UserList.css';
 
 const UserList = () => {
   const navigate = useNavigate();
+  
+  // Get user and org info
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const isSuperAdmin = user.role_name?.toLowerCase().trim() === 'super admin';
+  const isOrgAdmin = user.role_name?.toLowerCase().trim() === 'admin';
+  const userOrgId = parseInt(user.org_id) || null;
+  
   const [users, setUsers] = useState([]);
   const [organizations, setOrganizations] = useState([]);
   const [roles, setRoles] = useState([]);
@@ -15,9 +22,9 @@ const UserList = () => {
   const [deleteConfirm, setDeleteConfirm] = useState(null);
 
   useEffect(() => {
-    fetchUsers();
-    fetchOrganizations();
     fetchRoles();
+    fetchOrganizations();
+    fetchUsers();
   }, []);
 
   const fetchUsers = async () => {
@@ -25,8 +32,20 @@ const UserList = () => {
       setIsLoading(true);
       const data = await getAllUsers();
       console.log('Users fetched:', data);
-      console.log('Last login values:', data.map(u => ({ id: u.id, email: u.email, last_login_at: u.last_login_at })));
-      setUsers(data);
+      console.log('Last login values:', data.map(u => ({ id: u.user_id, email: u.email, last_login_at: u.last_login_at })));
+      
+      let userList = Array.isArray(data) ? data : [];
+      
+      // If user is org admin, show only their organization's users
+      if (isOrgAdmin && userOrgId) {
+        userList = userList.filter(u => u.org_id === userOrgId);
+      }
+      // If Super Admin, exclude other Super Admin users
+      else if (isSuperAdmin) {
+        userList = userList.filter(u => u.role_name?.toLowerCase().trim() !== 'super admin');
+      }
+      
+      setUsers(userList);
       setError('');
     } catch (err) {
       setError(err.message || 'Failed to load users');
@@ -54,20 +73,18 @@ const UserList = () => {
     }
   };
 
-  const getOrgName = (orgId) => {
-    const org = organizations.find(o => o.id === orgId);
-    return org ? org.name : `Organization ${orgId}`;
+  const getOrgName = (orgId, organizationName) => {
+    return organizationName || `Organization ${orgId}`;
   };
 
-  const getRoleName = (roleId) => {
-    const role = roles.find(r => r.id === roleId);
-    return role ? role.name : `Role ${roleId}`;
+  const getRoleName = (roleId, roleName) => {
+    return roleName || `Role ${roleId}`;
   };
 
   const handleDelete = async () => {
     try {
-      await deleteUser(deleteConfirm.id);
-      setUsers(users.filter(u => u.id !== deleteConfirm.id));
+      await deleteUser(deleteConfirm.user_id);
+      setUsers(users.filter(u => u.user_id !== deleteConfirm.user_id));
       setDeleteConfirm(null);
     } catch (err) {
       setError(err.message || 'Failed to delete user');
@@ -76,11 +93,11 @@ const UserList = () => {
   };
 
   const handleEdit = (user) => {
-    navigate(`/users/edit/${user.id}`);
+    navigate(`/users/edit/${user.user_id}`);
   };
 
   const handleView = (user) => {
-    navigate(`/users/${user.id}`);
+    navigate(`/users/${user.user_id}`);
   };
 
   const formatDate = (dateString) => {
@@ -144,11 +161,11 @@ const UserList = () => {
           </thead>
           <tbody>
             {users.map(user => (
-              <tr key={user.id}>
-                <td>#{user.id}</td>
+              <tr key={user.user_id}>
+                <td>#{user.user_id}</td>
                 <td>{user.email}</td>
-                <td>{getOrgName(user.org_id)}</td>
-                <td>{getRoleName(user.role_id)}</td>
+                <td>{getOrgName(user.org_id, user.organization_name)}</td>
+                <td>{getRoleName(user.role_id, user.role_name)}</td>
                 <td>{user.phone || '-'}</td>
                 <td>
                   <span className={`status-badge ${user.active ? 'active' : 'inactive'}`}>

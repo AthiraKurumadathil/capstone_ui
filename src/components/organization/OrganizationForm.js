@@ -116,6 +116,15 @@ const OrganizationForm = () => {
 
   return (
     <div className="org-form-container">
+      {isEditMode && (
+        <button 
+          className="btn btn-secondary org-form-back-btn"
+          onClick={() => navigate('/organizations')}
+          style={{ marginBottom: '20px' }}
+        >
+          ← Back to Organizations
+        </button>
+      )}
       <div className="org-form-card">
         <h2>{isEditMode ? 'Edit Organization' : 'Create Organization'}</h2>
 

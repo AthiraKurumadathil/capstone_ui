@@ -8,6 +8,13 @@ import './UserForm.css';
 const UserForm = () => {
   const { userId } = useParams();
   const navigate = useNavigate();
+  
+  // Get user and org info
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const isSuperAdmin = user.role_name?.toLowerCase().trim() === 'super admin';
+  const isOrgAdmin = user.role_name?.toLowerCase().trim() === 'admin';
+  const userOrgId = parseInt(user.org_id) || null;
+  
   const [form, setForm] = useState({
     org_id: '',
     role_id: '',
@@ -16,6 +23,7 @@ const UserForm = () => {
     active: true
   });
   const [organizations, setOrganizations] = useState([]);
+  const [allRoles, setAllRoles] = useState([]);
   const [roles, setRoles] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -50,7 +58,16 @@ const UserForm = () => {
   const fetchOrganizations = async () => {
     try {
       const data = await getAllOrganizations();
-      setOrganizations(Array.isArray(data) ? data : []);
+      let orgList = Array.isArray(data) ? data : [];
+      
+      // If user is org admin, show only their organization
+      if (isOrgAdmin && userOrgId) {
+        orgList = orgList.filter(org => org.id === userOrgId);
+        // Auto-select user's organization
+        setForm(prev => ({ ...prev, org_id: userOrgId.toString() }));
+      }
+      
+      setOrganizations(orgList);
     } catch (err) {
       console.error('Error fetching organizations:', err);
     }
@@ -59,10 +76,33 @@ const UserForm = () => {
   const fetchRoles = async () => {
     try {
       const data = await getAllRoles();
-      setRoles(Array.isArray(data) ? data : []);
+      let roleList = Array.isArray(data) ? data : [];
+      
+      // Store all roles
+      setAllRoles(roleList);
+      
+      // For Super Admin, don't show any roles initially - wait for organization selection
+      if (isSuperAdmin) {
+        setRoles([]);
+      } 
+      // For Organization Admin, show only their organization's roles
+      else if (isOrgAdmin && userOrgId) {
+        roleList = roleList.filter(role => role.org_id === userOrgId);
+        setRoles(roleList);
+      }
     } catch (err) {
       console.error('Error fetching roles:', err);
     }
+  };
+
+  const filterRolesByOrganization = (orgId) => {
+    if (!orgId) {
+      setRoles([]);
+      return;
+    }
+    
+    let filteredRoles = allRoles.filter(role => role.org_id === parseInt(orgId));
+    setRoles(filteredRoles);
   };
 
   const handleChange = (e) => {
@@ -72,6 +112,11 @@ const UserForm = () => {
       [name]: type === 'checkbox' ? checked : value
     }));
     setError('');
+    
+    // Filter roles when organization changes
+    if (name === 'org_id' && isSuperAdmin) {
+      filterRolesByOrganization(value);
+    }
   };
 
   const validateForm = () => {

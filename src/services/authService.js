@@ -58,7 +58,7 @@ export const loginUser = async (email, password) => {
     if (token) {
       localStorage.setItem('token', token);
       
-      // Decode token to extract role_id
+      // Decode token to extract role_id and role_name
       const decodedToken = decodeToken(token);
       console.log('Decoded token:', decodedToken);
       
@@ -68,9 +68,17 @@ export const loginUser = async (email, password) => {
         id: response.data.user_id || response.data.id,
       };
       
-      // Add role_id from decoded token if not already in userData
-      if (decodedToken && decodedToken.role_id && !userData.role_id) {
-        userData.role_id = decodedToken.role_id;
+      // Add role_id, role_name, and org_id from decoded token if not already in userData
+      if (decodedToken) {
+        if (decodedToken.role_id && !userData.role_id) {
+          userData.role_id = decodedToken.role_id;
+        }
+        if (decodedToken.role_name && !userData.role_name) {
+          userData.role_name = decodedToken.role_name;
+        }
+        if (decodedToken.org_id && !userData.org_id) {
+          userData.org_id = decodedToken.org_id;
+        }
       }
       
       console.log('User data to be stored:', userData);

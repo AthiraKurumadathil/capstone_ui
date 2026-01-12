@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getRole, deleteRole } from '../../services/roleService';
+import { getAllOrganizations } from '../../services/organizationService';
 import './RoleDetail.css';
 
 const RoleDetail = () => {
   const { roleId } = useParams();
   const navigate = useNavigate();
   const [role, setRole] = useState(null);
+  const [organizations, setOrganizations] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [deleteConfirm, setDeleteConfirm] = useState(false);
 
   useEffect(() => {
     fetchRole();
+    fetchOrganizations();
   }, [roleId]);
 
   const fetchRole = async () => {
@@ -46,6 +49,15 @@ const RoleDetail = () => {
     }
   };
 
+  const fetchOrganizations = async () => {
+    try {
+      const data = await getAllOrganizations();
+      setOrganizations(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error('Error fetching organizations:', err);
+    }
+  };
+
   const handleDelete = async () => {
     try {
       await deleteRole(roleId);
@@ -55,6 +67,11 @@ const RoleDetail = () => {
       setError(errorMsg);
       setDeleteConfirm(false);
     }
+  };
+
+  const getOrgName = (orgId) => {
+    const org = organizations.find(o => o.id === orgId);
+    return org ? org.name : `Organization ${orgId}`;
   };
 
   if (isLoading) {
@@ -148,6 +165,11 @@ const RoleDetail = () => {
           <div className="role-detail-item">
             <label>Name</label>
             <p>{role.name}</p>
+          </div>
+
+          <div className="role-detail-item">
+            <label>Organization</label>
+            <p>{getOrgName(role.org_id)}</p>
           </div>
 
           {role.created_at && (

@@ -15,6 +15,11 @@ const EnrollmentList = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [deleteConfirm, setDeleteConfirm] = useState(null);
+  
+  // Get user and org info
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const isOrgAdmin = user.role_name?.toLowerCase().trim() === 'admin';
+  const userOrgId = parseInt(user.org_id) || null;
 
   useEffect(() => {
     fetchEnrollments();
@@ -27,8 +32,15 @@ const EnrollmentList = () => {
     try {
       setIsLoading(true);
       const data = await getAllEnrollments();
-      console.log('Enrollments fetched:', data);
-      setEnrollments(data);
+      let filteredData = Array.isArray(data) ? data : [];
+      
+      // If user is org admin, filter by their organization
+      if (isOrgAdmin && userOrgId) {
+        filteredData = filteredData.filter(enrollment => enrollment.org_id === userOrgId);
+      }
+      
+      console.log('Enrollments fetched:', filteredData);
+      setEnrollments(filteredData);
       setError('');
     } catch (err) {
       setError(err.message || 'Failed to load enrollments');

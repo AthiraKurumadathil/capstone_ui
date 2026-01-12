@@ -15,6 +15,11 @@ const BatchList = () => {
   const [error, setError] = useState('');
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const navigate = useNavigate();
+  
+  // Get user and org info
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const isOrgAdmin = user.role_name?.toLowerCase().trim() === 'admin';
+  const userOrgId = parseInt(user.org_id) || null;
 
   useEffect(() => {
     fetchBatches();
@@ -22,6 +27,28 @@ const BatchList = () => {
     fetchActivities();
     fetchFeePlans();
   }, []);
+
+  const fetchBatches = async () => {
+    try {
+      setIsLoading(true);
+      const data = await getAllBatches();
+      let filteredData = Array.isArray(data) ? data : [];
+      
+      // If user is org admin, filter by their organization
+      if (isOrgAdmin && userOrgId) {
+        filteredData = filteredData.filter(batch => batch.org_id === userOrgId);
+      }
+      
+      setBatches(filteredData);
+      setError('');
+    } catch (err) {
+      const errorMsg = err.message || 'Failed to load batches';
+      setError(errorMsg);
+      console.error('Fetch error details:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const fetchOrganizations = async () => {
     try {
@@ -47,21 +74,6 @@ const BatchList = () => {
       setFeePlans(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error('Error fetching fee plans:', err);
-    }
-  };
-
-  const fetchBatches = async () => {
-    try {
-      setIsLoading(true);
-      const data = await getAllBatches();
-      setBatches(Array.isArray(data) ? data : []);
-      setError('');
-    } catch (err) {
-      const errorMsg = err.message || 'Failed to load batches';
-      setError(errorMsg);
-      console.error('Fetch error details:', err);
-    } finally {
-      setIsLoading(false);
     }
   };
 

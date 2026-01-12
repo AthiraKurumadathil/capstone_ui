@@ -119,14 +119,13 @@ export const createOrganization = async (organizationData) => {
 export const updateOrganization = async (orgId, organizationData) => {
   try {
     const response = await apiClient.put(`/organizations/${orgId}`, organizationData);
+    const org = response.data;
     console.log('Updated organization response:', org);
     
     // Normalize to ensure id field exists - use org_id as primary
-    
-    // Normalize to ensure id field exists
     return {
       ...org,
-      id: org.id || org.organisation_id || org.orgId
+      id: org.org_id || org.id || org.organisation_id || org.orgId
     };
   } catch (error) {
     console.error('Error updating organization:', error);

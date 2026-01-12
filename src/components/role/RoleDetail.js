@@ -21,14 +21,24 @@ const RoleDetail = () => {
   const fetchRole = async () => {
     try {
       setIsLoading(true);
+      setError('');
       console.log(`Fetching role ${roleId}`);
       const data = await getRole(roleId);
       console.log('Role fetched:', data);
+      console.log('Role data type:', typeof data);
+      console.log('Role properties:', Object.keys(data));
+      
+      if (!data || typeof data !== 'object') {
+        setError('Invalid role data received');
+        setRole(null);
+        return;
+      }
+      
       setRole(data);
-      setError('');
     } catch (err) {
       const errorMsg = err.message || 'Failed to load role';
       console.error('Fetch error details:', err);
+      console.error('Full error object:', err);
       
       // Check if it's a token-related error
       if (errorMsg.includes('401') || errorMsg.includes('Unauthorized') || errorMsg.includes('Token')) {
@@ -44,6 +54,7 @@ const RoleDetail = () => {
       } else {
         setError(errorMsg);
       }
+      setRole(null);
     } finally {
       setIsLoading(false);
     }
@@ -70,7 +81,9 @@ const RoleDetail = () => {
   };
 
   const getOrgName = (orgId) => {
+    console.log('Getting org name for orgId:', orgId, 'Available orgs:', organizations);
     const org = organizations.find(o => o.id === orgId);
+    console.log('Found org:', org);
     return org ? org.name : `Organization ${orgId}`;
   };
 

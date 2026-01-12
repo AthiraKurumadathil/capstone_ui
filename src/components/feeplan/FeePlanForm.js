@@ -8,7 +8,7 @@ const FeePlanForm = () => {
   const [formData, setFormData] = useState({
     org_id: '',
     name: '',
-    billing_type: '',
+    fee_plan_id: '',
     amount: '',
     currency: '',
     active: true,
@@ -36,6 +36,17 @@ const FeePlanForm = () => {
       loadFeePlan();
     }
   }, [feePlanId]);
+
+  useEffect(() => {
+    console.log('Form data updated:', formData);
+    console.log('Fee plan ID field value:', formData.fee_plan_id, 'Type:', typeof formData.fee_plan_id);
+  }, [formData]);
+
+  useEffect(() => {
+    if (isEditMode) {
+      console.log('EDIT MODE ACTIVE - formData.fee_plan_id:', formData.fee_plan_id);
+    }
+  }, [isEditMode]);
 
   const fetchOrganizations = async () => {
     try {
@@ -69,16 +80,37 @@ const FeePlanForm = () => {
         return;
       }
       const data = await getFeePlan(feePlanIdInt);
+      console.log('Loaded fee plan data:', data);
+      console.log('All data properties:', Object.keys(data));
+      
+      // Try multiple possible field names
+      let billingTypeValue = null;
+      if (data.billing_type_id !== null && data.billing_type_id !== undefined) {
+        billingTypeValue = data.billing_type_id;
+        console.log('Using billing_type_id:', billingTypeValue);
+      } else if (data.fee_plan_id !== null && data.fee_plan_id !== undefined) {
+        billingTypeValue = data.fee_plan_id;
+        console.log('Using fee_plan_id:', billingTypeValue);
+      } else if (data.billing_type !== null && data.billing_type !== undefined) {
+        billingTypeValue = data.billing_type;
+        console.log('Using billing_type:', billingTypeValue);
+      }
+      
+      const feePlanTypeId = String(billingTypeValue || '');
+      console.log('Fee plan type ID to set:', feePlanTypeId, 'Type:', typeof feePlanTypeId);
+      
       setFormData({
-        org_id: data.org_id || '',
+        org_id: String(data.org_id) || '',
         name: data.name || '',
-        billing_type: data.billing_type || '',
-        amount: data.amount || '',
+        fee_plan_id: feePlanTypeId,
+        amount: String(data.amount) || '',
         currency: data.currency || '',
         active: data.active !== undefined ? data.active : true,
       });
+      console.log('Form data set with fee_plan_id:', feePlanTypeId);
     } catch (err) {
       setServerError(err.message || 'Failed to load fee plan');
+      console.error('Error loading fee plan:', err);
     } finally {
       setPageLoading(false);
     }
@@ -95,8 +127,8 @@ const FeePlanForm = () => {
       newErrors.name = 'Fee plan name is required';
     }
 
-    if (!formData.billing_type) {
-      newErrors.billing_type = 'Billing type is required';
+    if (!formData.fee_plan_id) {
+      newErrors.fee_plan_id = 'Fee plan type is required';
     }
 
     if (!formData.amount || isNaN(parseFloat(formData.amount))) {
@@ -113,6 +145,7 @@ const FeePlanForm = () => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+    console.log(`Field changed: ${name} = ${value}`);
     setFormData(prev => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value,
@@ -137,20 +170,38 @@ const FeePlanForm = () => {
     setIsLoading(true);
 
     try {
+      console.log('Current formData before submit:', formData);
+      console.log('fee_plan_id value:', formData.fee_plan_id, 'parsed:', parseInt(formData.fee_plan_id, 10));
+      
+      const billingTypeId = parseInt(formData.fee_plan_id, 10);
+      console.log('Parsed billing_type_id:', billingTypeId, 'isNaN:', isNaN(billingTypeId));
+      
+      // Check if billing_type_id is valid
+      if (isNaN(billingTypeId)) {
+        setServerError('Please select a valid billing type');
+        setIsLoading(false);
+        return;
+      }
+      
       const submitData = {
         org_id: parseInt(formData.org_id, 10),
         name: formData.name.trim(),
-        billing_type: formData.billing_type.trim(),
+        billing_type_id: billingTypeId,
         amount: parseFloat(formData.amount),
         currency: formData.currency.trim().toUpperCase(),
         active: formData.active,
       };
+      
+      console.log('Final submitData to be sent:', submitData);
+      console.log('Submitted keys:', Object.keys(submitData));
 
       if (isEditMode) {
         const feePlanIdInt = parseInt(feePlanId, 10);
+        console.log('Updating fee plan with data:', submitData);
         await updateFeePlan(feePlanIdInt, submitData);
         alert('Fee plan updated successfully');
       } else {
+        console.log('Creating fee plan with data:', submitData);
         await createFeePlan(submitData);
         alert('Fee plan created successfully');
       }
@@ -194,7 +245,7 @@ const FeePlanForm = () => {
                 value={formData.org_id}
                 onChange={handleChange}
                 className={errors.org_id ? 'feeplan-form-input error' : 'feeplan-form-input'}
-                disabled={organizationsLoading || isOrgAdmin}
+                disabled={orgsLoading || isOrgAdmin}
               >
                 <option value="">Select an organization</option>
                 {organizations.map(org => (
@@ -223,17 +274,20 @@ const FeePlanForm = () => {
 
           <div className="feeplan-form-row">
             <div className="feeplan-form-group">
-              <label htmlFor="billing_type">Billing Type *</label>
-              <input
-                id="billing_type"
-                type="text"
-                name="billing_type"
-                value={formData.billing_type}
+              <label htmlFor="fee_plan_id">Billing Type *</label>
+              <select
+                id="fee_plan_id"
+                name="fee_plan_id"
+                value={formData.fee_plan_id}
                 onChange={handleChange}
-                className={errors.billing_type ? 'feeplan-form-input error' : 'feeplan-form-input'}
-                placeholder="e.g., Monthly, Annual"
-              />
-              {errors.billing_type && <span className="feeplan-form-error-msg">{errors.billing_type}</span>}
+                className={errors.fee_plan_id ? 'feeplan-form-input error' : 'feeplan-form-input'}
+              >
+                <option value="">Select billing type</option>
+                <option value="1">Monthly</option>
+                <option value="2">Batch</option>
+                <option value="3">Session</option>
+              </select>
+              {errors.fee_plan_id && <span className="feeplan-form-error-msg">{errors.fee_plan_id}</span>}
             </div>
 
             <div className="feeplan-form-group">

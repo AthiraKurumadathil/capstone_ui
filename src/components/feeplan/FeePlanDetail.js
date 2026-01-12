@@ -82,6 +82,15 @@ const FeePlanDetail = () => {
     return org ? org.name : `Organization ${orgId}`;
   };
 
+  const getBillingTypeName = (billingTypeId) => {
+    const billingTypes = {
+      1: 'Monthly',
+      2: 'Batch',
+      3: 'Session'
+    };
+    return billingTypes[billingTypeId] || billingTypeId;
+  };
+
   if (isLoading) {
     return <div className="feeplan-detail-loading">Loading fee plan details...</div>;
   }
@@ -119,7 +128,7 @@ const FeePlanDetail = () => {
 
           <div className="feeplan-detail-item">
             <label>Billing Type</label>
-            <p>{feePlan.billing_type}</p>
+            <p>{getBillingTypeName(feePlan.billing_type_id || feePlan.billing_type)}</p>
           </div>
 
           <div className="feeplan-detail-item">

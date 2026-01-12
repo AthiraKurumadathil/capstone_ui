@@ -138,18 +138,22 @@ const Home = () => {
             )}
 
             {/* Menu Items for Both Admin and Non-Admin Users */}
-            <button 
-              className={`sidebar-link ${isInvoicePage ? 'active' : ''}`}
-              onClick={() => navigate('/invoices')}
-            >
-              Invoices
-            </button>
-            <button 
-              className={`sidebar-link ${isPaymentPage ? 'active' : ''}`}
-              onClick={() => navigate('/payments')}
-            >
-              Payments
-            </button>
+            {showAdminMenus && (
+              <button 
+                className={`sidebar-link ${isInvoicePage ? 'active' : ''}`}
+                onClick={() => navigate('/invoices')}
+              >
+                Invoices
+              </button>
+            )}
+            {showAdminMenus && (
+              <button 
+                className={`sidebar-link ${isPaymentPage ? 'active' : ''}`}
+                onClick={() => navigate('/payments')}
+              >
+                Payments
+              </button>
+            )}
             <button 
               className={`sidebar-link ${isAttendancePage ? 'active' : ''}`}
               onClick={() => navigate('/attendance')}

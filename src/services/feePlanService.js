@@ -86,7 +86,7 @@ export const updateFeePlan = async (feePlanId, feePlanData) => {
     const dataToSend = {
       org_id: feePlanData.org_id,
       name: feePlanData.name,
-      billing_type: feePlanData.billing_type,
+      billing_type_id: feePlanData.billing_type_id,
       amount: feePlanData.amount,
       currency: feePlanData.currency,
       active: feePlanData.active,

@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { createInvoice, updateInvoice, getInvoice } from '../../services/invoiceService';
 import { getAllOrganizations } from '../../services/organizationService';
 import { getAllEnrollments } from '../../services/enrollmentService';
+import apiClient from '../../services/authService';
 import './InvoiceForm.css';
 
 const InvoiceForm = () => {
@@ -99,12 +100,56 @@ const InvoiceForm = () => {
     return org ? org.name : '';
   };
 
+  const fetchAmountByEnrollment = async (enrollmentId) => {
+    if (!enrollmentId) {
+      setForm(prev => ({ ...prev, total_amount: '' }));
+      return;
+    }
+
+    try {
+      console.log('Fetching amount for enrollment:', enrollmentId);
+      
+      const url = `/invoices/amount/${enrollmentId}`;
+      console.log('Fetching from URL:', url);
+      
+      const response = await apiClient.get(url);
+      
+      console.log('Amount response data:', response.data);
+      console.log('Response type:', typeof response.data);
+      
+      // Handle different response formats
+      let amount = null;
+      if (typeof response.data === 'object' && response.data !== null) {
+        amount = response.data.amount || response.data.total_amount || response.data.value;
+      } else if (typeof response.data === 'number') {
+        amount = response.data;
+      }
+      
+      console.log('Extracted amount:', amount);
+      
+      if (amount !== null && amount !== undefined) {
+        setForm(prev => ({ ...prev, total_amount: String(amount) }));
+        console.log('Form updated with amount:', amount);
+      } else {
+        console.warn('Amount value not found in response');
+      }
+    } catch (err) {
+      console.error('Error fetching amount:', err);
+      setError(`Error fetching amount: ${err.message}`);
+    }
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm(prev => ({
       ...prev,
       [name]: value
     }));
+
+    // When enrollment changes, fetch the amount
+    if (name === 'enrollment_id' && value) {
+      fetchAmountByEnrollment(value);
+    }
   };
 
   const validateForm = () => {

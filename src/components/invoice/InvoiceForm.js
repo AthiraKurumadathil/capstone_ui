@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { createInvoice, updateInvoice, getInvoice } from '../../services/invoiceService';
 import { getAllOrganizations } from '../../services/organizationService';
+import { getAllEnrollments } from '../../services/enrollmentService';
 import './InvoiceForm.css';
 
 const InvoiceForm = () => {
@@ -15,6 +16,7 @@ const InvoiceForm = () => {
   
   const [organizations, setOrganizations] = useState([]);
   const [enrollments, setEnrollments] = useState([]);
+  const [enrollmentsLoading, setEnrollmentsLoading] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [form, setForm] = useState({
@@ -28,6 +30,7 @@ const InvoiceForm = () => {
 
   useEffect(() => {
     fetchOrganizations();
+    fetchEnrollments();
     if (invoiceId) {
       fetchInvoice(invoiceId);
     }
@@ -52,6 +55,26 @@ const InvoiceForm = () => {
     }
   };
 
+  const fetchEnrollments = async () => {
+    try {
+      setEnrollmentsLoading(true);
+      const data = await getAllEnrollments();
+      let enrollmentsList = Array.isArray(data) ? data : [];
+      
+      // If user is org admin, filter enrollments by their organization
+      if (isOrgAdmin && userOrgId) {
+        enrollmentsList = enrollmentsList.filter(enrollment => enrollment.org_id === userOrgId);
+      }
+      
+      setEnrollments(enrollmentsList);
+    } catch (err) {
+      console.error('Error fetching enrollments:', err);
+      setEnrollments([]);
+    } finally {
+      setEnrollmentsLoading(false);
+    }
+  };
+
   const fetchInvoice = async (id) => {
     try {
       setIsLoading(true);
@@ -69,6 +92,11 @@ const InvoiceForm = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const getOrganizationName = (orgId) => {
+    const org = organizations.find(o => o.id === parseInt(orgId));
+    return org ? org.name : '';
   };
 
   const handleChange = (e) => {
@@ -146,6 +174,7 @@ const InvoiceForm = () => {
                 name="org_id" 
                 value={form.org_id}
                 onChange={handleChange}
+                disabled={isOrgAdmin}
                 required
               >
                 <option value="">Select Organization</option>
@@ -157,16 +186,21 @@ const InvoiceForm = () => {
 
             <div className="invoice-form-group">
               <label htmlFor="enrollment_id">Enrollment ID *</label>
-              <input 
-                type="number" 
+              <select 
                 id="enrollment_id"
                 name="enrollment_id" 
                 value={form.enrollment_id}
                 onChange={handleChange}
-                placeholder="Enter enrollment ID"
-                min="1"
+                disabled={enrollmentsLoading}
                 required
-              />
+              >
+                <option value="">{enrollmentsLoading ? 'Loading enrollments...' : 'Select an enrollment'}</option>
+                {enrollments.map(enrollment => (
+                  <option key={enrollment.id} value={enrollment.id}>
+                    {enrollment.id}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div className="invoice-form-group">

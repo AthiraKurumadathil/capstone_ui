@@ -6,6 +6,7 @@ import './BatchSessionForm.css';
 
 const BatchSessionForm = () => {
   const [formData, setFormData] = useState({
+    session_name: '',
     batch_id: '',
     session_date: '',
     start_time: '',
@@ -56,6 +57,7 @@ const BatchSessionForm = () => {
       }
       const data = await getBatchSession(sessionIdInt);
       setFormData({
+        session_name: data.session_name || '',
         batch_id: data.batch_id || '',
         session_date: data.session_date || '',
         start_time: data.start_time || '',
@@ -73,12 +75,28 @@ const BatchSessionForm = () => {
   const validateForm = () => {
     const newErrors = {};
 
+    if (!formData.session_name || formData.session_name.trim().length === 0) {
+      newErrors.session_name = 'Session name is required';
+    }
+
     if (!formData.batch_id) {
       newErrors.batch_id = 'Batch is required';
     }
 
     if (!formData.session_date) {
       newErrors.session_date = 'Session date is required';
+    } else if (formData.batch_id) {
+      // Validate that session date is between batch start and end date
+      const selectedBatch = batches.find(b => String(b.id) === formData.batch_id);
+      if (selectedBatch && selectedBatch.start_date && selectedBatch.end_date) {
+        const sessionDate = new Date(formData.session_date).toISOString().split('T')[0];
+        const batchStart = new Date(selectedBatch.start_date).toISOString().split('T')[0];
+        const batchEnd = new Date(selectedBatch.end_date).toISOString().split('T')[0];
+        
+        if (sessionDate < batchStart || sessionDate > batchEnd) {
+          newErrors.session_date = `Session date must be between ${batchStart} and ${batchEnd}`;
+        }
+      }
     }
 
     if (!formData.start_time) {
@@ -124,6 +142,7 @@ const BatchSessionForm = () => {
 
     try {
       const submitData = {
+        session_name: formData.session_name ? formData.session_name.trim() : null,
         batch_id: formData.batch_id ? parseInt(formData.batch_id, 10) : null,
         session_date: formData.session_date || null,
         start_time: formData.start_time || null,
@@ -179,6 +198,20 @@ const BatchSessionForm = () => {
 
         <form onSubmit={handleSubmit} noValidate>
           <div className="batchsession-form-row">
+            <div className="batchsession-form-group">
+              <label htmlFor="session_name">Session Name *</label>
+              <input
+                type="text"
+                id="session_name"
+                name="session_name"
+                value={formData.session_name}
+                onChange={handleChange}
+                className={errors.session_name ? 'batchsession-form-input error' : 'batchsession-form-input'}
+                placeholder="Enter session name"
+              />
+              {errors.session_name && <span className="batchsession-form-error-msg">{errors.session_name}</span>}
+            </div>
+
             <div className="batchsession-form-group">
               <label htmlFor="batch_id">Batch *</label>
               <select

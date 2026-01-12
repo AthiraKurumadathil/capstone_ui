@@ -101,6 +101,11 @@ const BatchSessionDetail = () => {
           </div>
 
           <div className="batchsession-detail-item">
+            <label>Session Name</label>
+            <p>{session.session_name || '-'}</p>
+          </div>
+
+          <div className="batchsession-detail-item">
             <label>Batch</label>
             <p>{getBatchName(session.batch_id)}</p>
           </div>

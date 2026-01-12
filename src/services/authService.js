@@ -18,9 +18,17 @@ const decodeToken = (token) => {
 
 const apiClient = axios.create({
   baseURL: process.env.REACT_APP_API_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+});
+
+// Add request interceptor to set Content-Type for non-FormData requests
+apiClient.interceptors.request.use((config) => {
+  // Only set Content-Type if not FormData and not already set
+  if (!(config.data instanceof FormData) && !config.headers['Content-Type']) {
+    config.headers['Content-Type'] = 'application/json';
+  }
+  return config;
+}, (error) => {
+  return Promise.reject(error);
 });
 
 // Add response interceptor to handle 401 (token expired) errors

@@ -18,9 +18,14 @@ const BatchSessionList = () => {
   const userOrgId = parseInt(user.org_id) || null;
 
   useEffect(() => {
-    fetchSessions();
     fetchBatches();
   }, []);
+
+  useEffect(() => {
+    if (batches.length > 0 || !isOrgAdmin) {
+      fetchSessions();
+    }
+  }, [batches]);
 
   const fetchSessions = async () => {
     try {
@@ -28,9 +33,14 @@ const BatchSessionList = () => {
       const data = await getAllBatchSessions();
       let sessionsArray = Array.isArray(data) ? data : data?.data || [];
       
-      // If user is org admin, filter by their organization
+      // If user is org admin, filter sessions by their organization
+      // Sessions are linked to batches, so filter by batch's org_id
       if (isOrgAdmin && userOrgId) {
-        sessionsArray = sessionsArray.filter(session => session.org_id === userOrgId);
+        sessionsArray = sessionsArray.filter(session => {
+          // Find the batch for this session and check its org_id
+          const batch = batches.find(b => b.id === session.batch_id || b.batch_id === session.batch_id);
+          return batch && batch.org_id === userOrgId;
+        });
       }
       
       console.log('Fetched sessions:', sessionsArray);
@@ -48,7 +58,14 @@ const BatchSessionList = () => {
   const fetchBatches = async () => {
     try {
       const data = await getAllBatches();
-      setBatches(Array.isArray(data) ? data : []);
+      let batchesArray = Array.isArray(data) ? data : [];
+      
+      // If user is org admin, filter batches by their organization
+      if (isOrgAdmin && userOrgId) {
+        batchesArray = batchesArray.filter(batch => batch.org_id === userOrgId);
+      }
+      
+      setBatches(batchesArray);
     } catch (err) {
       console.error('Error fetching batches:', err);
     }
@@ -124,6 +141,7 @@ const BatchSessionList = () => {
           <table className="batchsession-list-table">
             <thead>
               <tr>
+                <th>Session Name</th>
                 <th>Session Date</th>
                 <th>Batch</th>
                 <th>Start Time</th>
@@ -136,6 +154,7 @@ const BatchSessionList = () => {
             <tbody>
               {sessions.map(session => (
                 <tr key={session.session_id}>
+                  <td>{session.session_name || '-'}</td>
                   <td>{session.session_date ? new Date(session.session_date).toLocaleDateString() : '-'}</td>
                   <td>{getBatchName(session.batch_id)}</td>
                   <td>{session.start_time || '-'}</td>

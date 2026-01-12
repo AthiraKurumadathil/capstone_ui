@@ -194,7 +194,7 @@ const FeePlanForm = () => {
                 value={formData.org_id}
                 onChange={handleChange}
                 className={errors.org_id ? 'feeplan-form-input error' : 'feeplan-form-input'}
-                disabled={orgsLoading}
+                disabled={organizationsLoading || isOrgAdmin}
               >
                 <option value="">Select an organization</option>
                 {organizations.map(org => (

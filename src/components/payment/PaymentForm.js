@@ -11,6 +11,7 @@ const PaymentForm = () => {
   
   // Get user and org info
   const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const isSuperAdmin = user.role_name?.toLowerCase().trim() === 'super admin';
   const isOrgAdmin = user.role_name?.toLowerCase().trim() === 'admin';
   const userOrgId = parseInt(user.org_id) || null;
   
@@ -30,6 +31,10 @@ const PaymentForm = () => {
 
   useEffect(() => {
     fetchOrganizations();
+    // For org admin, initialize invoices on mount
+    if (isOrgAdmin && userOrgId) {
+      fetchInvoicesByOrg(userOrgId);
+    }
     if (paymentId) {
       fetchPayment(paymentId);
     }
@@ -193,6 +198,7 @@ const PaymentForm = () => {
                 name="org_id" 
                 value={form.org_id}
                 onChange={handleChange}
+                disabled={isOrgAdmin}
                 required
               >
                 <option value="">Select Organization</option>

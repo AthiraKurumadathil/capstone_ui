@@ -206,7 +206,7 @@ const ActivityForm = () => {
                 value={formData.org_id}
                 onChange={handleChange}
                 className={`activity-form-input ${errors.org_id ? 'input-error' : ''}`}
-                disabled={isLoading || orgsLoading}
+                disabled={isLoading || orgsLoading || isOrgAdmin}
               >
                 <option value="">
                   {orgsLoading ? 'Loading organizations...' : 'Select an organization'}

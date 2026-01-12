@@ -253,6 +253,7 @@ const TrainerForm = () => {
                   value={formData.org_id}
                   onChange={handleChange}
                   className={errors.org_id ? 'trainer-form-input error' : 'trainer-form-input'}
+                  disabled={isOrgAdmin}
                 >
                   <option value="">Select an organization</option>
                   {organizations.map(org => (

@@ -24,6 +24,8 @@ const StudentForm = () => {
   const [pageLoading, setPageLoading] = useState(false);
   const [organizations, setOrganizations] = useState([]);
   const [organizationsLoading, setOrganizationsLoading] = useState(true);
+  const [photoPreview, setPhotoPreview] = useState(null);
+  const [photoFile, setPhotoFile] = useState(null);
 
   const navigate = useNavigate();
   const { studentId } = useParams();
@@ -78,6 +80,11 @@ const StudentForm = () => {
         notes: data.notes || '',
         active: data.active !== false,
       });
+      
+      // Load existing photo if available
+      if (data.student_photo_path) {
+        setPhotoPreview(data.student_photo_path);
+      }
     } catch (err) {
       setServerError(err.message || 'Failed to load student');
     } finally {
@@ -127,6 +134,43 @@ const StudentForm = () => {
     }
   };
 
+  const handlePhotoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        setServerError('Please upload a valid image file');
+        return;
+      }
+      
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        setServerError('Image size must be less than 5MB');
+        return;
+      }
+      
+      setPhotoFile(file);
+      
+      // Create preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPhotoPreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+      setServerError('');
+    }
+  };
+
+  const handleRemovePhoto = () => {
+    setPhotoFile(null);
+    setPhotoPreview(null);
+    // Reset the file input
+    const fileInput = document.getElementById('photo');
+    if (fileInput) {
+      fileInput.value = '';
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setServerError('');
@@ -139,28 +183,32 @@ const StudentForm = () => {
     setIsLoading(true);
 
     try {
-      const submitData = {
-        org_id: parseInt(formData.org_id, 10),
-        first_name: formData.first_name.trim(),
-        last_name: formData.last_name.trim(),
-        active: formData.active,
-      };
+      const submitData = new FormData();
+      submitData.append('org_id', parseInt(formData.org_id, 10));
+      submitData.append('first_name', formData.first_name.trim());
+      submitData.append('last_name', formData.last_name.trim());
+      submitData.append('active', formData.active);
 
       // Add optional fields
       if (formData.dob) {
-        submitData.dob = formData.dob;
+        submitData.append('dob', formData.dob);
       }
       if (formData.guardian_name) {
-        submitData.guardian_name = formData.guardian_name.trim();
+        submitData.append('guardian_name', formData.guardian_name.trim());
       }
       if (formData.guardian_phone) {
-        submitData.guardian_phone = formData.guardian_phone.trim();
+        submitData.append('guardian_phone', formData.guardian_phone.trim());
       }
       if (formData.guardian_email) {
-        submitData.guardian_email = formData.guardian_email.trim();
+        submitData.append('guardian_email', formData.guardian_email.trim());
       }
       if (formData.notes) {
-        submitData.notes = formData.notes.trim();
+        submitData.append('notes', formData.notes.trim());
+      }
+      
+      // Add photo if selected
+      if (photoFile) {
+        submitData.append('student_photo', photoFile);
       }
 
       if (isEditMode) {
@@ -201,7 +249,7 @@ const StudentForm = () => {
                 value={formData.org_id}
                 onChange={handleChange}
                 className={errors.org_id ? 'student-form-input error' : 'student-form-input'}
-                disabled={organizationsLoading}
+                disabled={organizationsLoading || isOrgAdmin}
               >
                 <option value="">Select an organization</option>
                 {organizations.map(org => (
@@ -241,6 +289,34 @@ const StudentForm = () => {
                 placeholder="Enter last name"
               />
               {errors.last_name && <span className="student-form-error-msg">{errors.last_name}</span>}
+            </div>
+          </div>
+
+          <div className="student-form-row">
+            <div className="student-form-group">
+              <label htmlFor="photo">Student Photo</label>
+              <input
+                type="file"
+                id="photo"
+                name="photo"
+                onChange={handlePhotoChange}
+                accept="image/*"
+                className="student-form-input"
+              />
+              <small>Max file size: 5MB. Supported formats: JPG, PNG, GIF</small>
+              {photoPreview && (
+                <div className="student-photo-preview">
+                  <img src={photoPreview} alt="Student preview" style={{ maxWidth: '150px', maxHeight: '150px', marginTop: '10px' }} />
+                  <button
+                    type="button"
+                    onClick={handleRemovePhoto}
+                    className="btn btn-sm btn-danger"
+                    style={{ marginTop: '10px' }}
+                  >
+                    Remove Photo
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 

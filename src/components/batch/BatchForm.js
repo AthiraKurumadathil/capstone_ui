@@ -26,8 +26,10 @@ const BatchForm = () => {
   const [pageLoading, setPageLoading] = useState(false);
   const [organizations, setOrganizations] = useState([]);
   const [organizationsLoading, setOrganizationsLoading] = useState(true);
+  const [allActivities, setAllActivities] = useState([]);
   const [activities, setActivities] = useState([]);
   const [activitiesLoading, setActivitiesLoading] = useState(true);
+  const [allFeePlans, setAllFeePlans] = useState([]);
   const [feePlans, setFeePlans] = useState([]);
   const [feePlansLoading, setFeePlansLoading] = useState(true);
 
@@ -36,6 +38,7 @@ const BatchForm = () => {
   
   // Get user and org info
   const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const isSuperAdmin = user.role_name?.toLowerCase().trim() === 'super admin';
   const isOrgAdmin = user.role_name?.toLowerCase().trim() === 'admin';
   const userOrgId = parseInt(user.org_id) || null;
 
@@ -76,12 +79,18 @@ const BatchForm = () => {
       const data = await getAllActivities();
       let activityList = Array.isArray(data) ? data : [];
       
-      // If user is org admin, show only their organization's activities
-      if (isOrgAdmin && userOrgId) {
-        activityList = activityList.filter(activity => activity.org_id === userOrgId);
-      }
+      // Store all activities
+      setAllActivities(activityList);
       
-      setActivities(activityList);
+      // For Super Admin, don't show any activities initially - wait for organization selection
+      if (isSuperAdmin) {
+        setActivities([]);
+      }
+      // If user is org admin, show only their organization's activities
+      else if (isOrgAdmin && userOrgId) {
+        activityList = activityList.filter(activity => activity.org_id === userOrgId);
+        setActivities(activityList);
+      }
     } catch (err) {
       console.error('Error fetching activities:', err);
       setActivities([]);
@@ -96,18 +105,40 @@ const BatchForm = () => {
       const data = await getAllFeePlans();
       let feePlanList = Array.isArray(data) ? data : [];
       
-      // If user is org admin, show only their organization's fee plans
-      if (isOrgAdmin && userOrgId) {
-        feePlanList = feePlanList.filter(plan => plan.org_id === userOrgId);
-      }
+      // Store all fee plans
+      setAllFeePlans(feePlanList);
       
-      setFeePlans(feePlanList);
+      // For Super Admin, don't show any fee plans initially - wait for organization selection
+      if (isSuperAdmin) {
+        setFeePlans([]);
+      }
+      // If user is org admin, show only their organization's fee plans
+      else if (isOrgAdmin && userOrgId) {
+        feePlanList = feePlanList.filter(plan => plan.org_id === userOrgId);
+        setFeePlans(feePlanList);
+      }
     } catch (err) {
       console.error('Error fetching fee plans:', err);
       setFeePlans([]);
     } finally {
       setFeePlansLoading(false);
     }
+  };
+
+  const filterByOrganization = (orgId) => {
+    if (!orgId) {
+      setActivities([]);
+      setFeePlans([]);
+      return;
+    }
+    
+    // Filter activities by organization
+    const filteredActivities = allActivities.filter(activity => activity.org_id === parseInt(orgId));
+    setActivities(filteredActivities);
+    
+    // Filter fee plans by organization
+    const filteredFeePlans = allFeePlans.filter(plan => plan.org_id === parseInt(orgId));
+    setFeePlans(filteredFeePlans);
   };
 
   const loadBatch = async () => {
@@ -175,6 +206,11 @@ const BatchForm = () => {
         ...prev,
         [name]: '',
       }));
+    }
+    
+    // Filter activities and fee plans when organization changes (for Super Admin)
+    if (name === 'org_id' && isSuperAdmin) {
+      filterByOrganization(value);
     }
   };
 
@@ -248,7 +284,7 @@ const BatchForm = () => {
                 value={formData.org_id}
                 onChange={handleChange}
                 className={errors.org_id ? 'batch-form-input error' : 'batch-form-input'}
-                disabled={organizationsLoading}
+                disabled={organizationsLoading || isOrgAdmin}
               >
                 <option value="">Select an organization</option>
                 {organizations.map(org => (

@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAllAttendance, deleteAttendance } from '../../services/attendanceService';
+import { getAllSessions } from '../../services/sessionService';
 import './AttendanceList.css';
 
 const AttendanceList = () => {
   const [attendance, setAttendance] = useState([]);
+  const [sessions, setSessions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   const [deleteConfirm, setDeleteConfirm] = useState(null);
@@ -16,8 +18,19 @@ const AttendanceList = () => {
   const userOrgId = parseInt(user.org_id) || null;
 
   useEffect(() => {
+    fetchSessions();
     fetchAttendance();
   }, []);
+
+  const fetchSessions = async () => {
+    try {
+      const data = await getAllSessions();
+      setSessions(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error('Error fetching sessions:', err);
+      setSessions([]);
+    }
+  };
 
   const fetchAttendance = async () => {
     try {
@@ -25,11 +38,11 @@ const AttendanceList = () => {
       const data = await getAllAttendance();
       let filteredData = Array.isArray(data) ? data : [];
       
-      // If user is org admin, filter by their organization
-      if (isOrgAdmin && userOrgId) {
-        filteredData = filteredData.filter(record => record.org_id === userOrgId);
-      }
+      // Attendance records don't need org_id filtering at the list level
+      // They are filtered by the backend based on the enrollments and sessions
+      // If org admin, the API should only return records for their organization
       
+      console.log('Fetched attendance records:', filteredData);
       setAttendance(filteredData);
       setError('');
     } catch (err) {
@@ -57,6 +70,11 @@ const AttendanceList = () => {
 
   const handleView = (attendanceId) => {
     navigate(`/attendance/${attendanceId}`);
+  };
+
+  const getSessionName = (sessionId) => {
+    const session = sessions.find(s => s.session_id === sessionId || s.id === sessionId);
+    return session ? session.session_name : `Session ${sessionId}`;
   };
 
   if (isLoading) {
@@ -99,7 +117,7 @@ const AttendanceList = () => {
             <thead>
               <tr>
                 <th>Attendance ID</th>
-                <th>Session ID</th>
+                <th>Session Name</th>
                 <th>Enrollment ID</th>
                 <th>Status</th>
                 <th>Marked At</th>
@@ -111,7 +129,7 @@ const AttendanceList = () => {
               {attendance.map(att => (
                 <tr key={att.id}>
                   <td className="attendance-id">{att.id}</td>
-                  <td>{att.session_id || '-'}</td>
+                  <td>{getSessionName(att.session_id)}</td>
                   <td>{att.enrollment_id || '-'}</td>
                   <td>
                     <span className={`attendance-status ${att.status ? att.status.toLowerCase() : ''}`}>

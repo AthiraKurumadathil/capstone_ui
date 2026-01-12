@@ -195,6 +195,7 @@ const UserForm = () => {
               name="org_id"
               value={form.org_id}
               onChange={handleChange}
+              disabled={isOrgAdmin}
               required
             >
               <option value="">Select Organization</option>

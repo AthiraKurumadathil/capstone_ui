@@ -104,6 +104,26 @@ const AttendanceForm = () => {
 
     if (!formData.marked_at) {
       newErrors.marked_at = 'Marked at timestamp is required';
+    } else if (formData.session_id) {
+      // Validate that marked_at is equal to or greater than session date
+      const strSessionId = String(formData.session_id).trim();
+      const session = sessions.find(s => {
+        const sId = String(s.session_id || s.id || '').trim();
+        return sId === strSessionId;
+      });
+
+      if (session && session.session_date) {
+        const sessionDate = new Date(session.session_date);
+        const markedDate = new Date(formData.marked_at);
+        
+        // Extract date parts to compare only dates (ignoring time)
+        const sessionDateOnly = new Date(sessionDate.getFullYear(), sessionDate.getMonth(), sessionDate.getDate());
+        const markedDateOnly = new Date(markedDate.getFullYear(), markedDate.getMonth(), markedDate.getDate());
+        
+        if (markedDateOnly < sessionDateOnly) {
+          newErrors.marked_at = 'Marked date cannot be before the session date';
+        }
+      }
     }
 
     // Validate marked_by if provided - must be a valid integer
@@ -130,6 +150,52 @@ const AttendanceForm = () => {
         [name]: '',
       }));
     }
+  };
+
+  const getSessionDate = (sessionId) => {
+    if (!sessionId) return '-';
+    
+    // Convert to string for comparison since dropdown values are strings
+    const strSessionId = String(sessionId).trim();
+    
+    const session = sessions.find(s => {
+      const sId = String(s.session_id || s.id || '').trim();
+      return sId === strSessionId;
+    });
+    
+    if (session) {
+      console.log('Found session with date:', session.session_date);
+      return session.session_date 
+        ? new Date(session.session_date).toLocaleDateString() 
+        : '-';
+    }
+    
+    console.log('Session not found for ID:', strSessionId, 'Available:', sessions.map(s => ({ id: s.session_id || s.id })));
+    return '-';
+  };
+
+  const getSessionStartTime = (sessionId) => {
+    if (!sessionId) return '-';
+    
+    const strSessionId = String(sessionId).trim();
+    const session = sessions.find(s => {
+      const sId = String(s.session_id || s.id || '').trim();
+      return sId === strSessionId;
+    });
+    
+    return session && session.start_time ? session.start_time : '-';
+  };
+
+  const getSessionEndTime = (sessionId) => {
+    if (!sessionId) return '-';
+    
+    const strSessionId = String(sessionId).trim();
+    const session = sessions.find(s => {
+      const sId = String(s.session_id || s.id || '').trim();
+      return sId === strSessionId;
+    });
+    
+    return session && session.end_time ? session.end_time : '-';
   };
 
   const handleSubmit = async (e) => {
@@ -214,8 +280,8 @@ const AttendanceForm = () => {
               >
                 <option value="">{sessionsLoading ? 'Loading sessions...' : 'Select a session'}</option>
                 {sessions.map(session => (
-                  <option key={session.id} value={String(session.id)}>
-                    Session {session.id} {session.name ? `- ${session.name}` : ''}
+                  <option key={session.session_id || session.id} value={String(session.session_id || session.id)}>
+                    {session.session_name || `Session ${session.session_id || session.id}`}
                   </option>
                 ))}
               </select>
@@ -223,7 +289,48 @@ const AttendanceForm = () => {
             </div>
 
             <div className="attendance-form-group">
-              <label htmlFor="enrollment_id">Enrollment *</label>
+              <label htmlFor="session_date">Session Date</label>
+              <input
+                type="text"
+                id="session_date"
+                name="session_date"
+                value={getSessionDate(formData.session_id)}
+                readOnly
+                className="attendance-form-input"
+                style={{ backgroundColor: '#f5f5f5' }}
+              />
+            </div>
+          </div>
+
+          <div className="attendance-form-row">
+            <div className="attendance-form-group">
+              <label htmlFor="start_time_display">Start Time</label>
+              <input
+                type="text"
+                id="start_time_display"
+                name="start_time_display"
+                value={getSessionStartTime(formData.session_id)}
+                readOnly
+                className="attendance-form-input"
+                style={{ backgroundColor: '#f5f5f5' }}
+              />
+            </div>
+
+            <div className="attendance-form-group">
+              <label htmlFor="end_time_display">End Time</label>
+              <input
+                type="text"
+                id="end_time_display"
+                name="end_time_display"
+                value={getSessionEndTime(formData.session_id)}
+                readOnly
+                className="attendance-form-input"
+                style={{ backgroundColor: '#f5f5f5' }}
+              />
+            </div>
+
+            <div className="attendance-form-group">
+              <label htmlFor="enrollment_id">Enrollment ID *</label>
               {enrollments.length > 0 ? (
                 <select
                   id="enrollment_id"

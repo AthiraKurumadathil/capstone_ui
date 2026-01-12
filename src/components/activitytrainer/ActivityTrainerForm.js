@@ -6,6 +6,12 @@ import { getAllTrainers } from '../../services/trainerService';
 import './ActivityTrainerForm.css';
 
 const ActivityTrainerForm = () => {
+  // Get user and org info
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const isSuperAdmin = user.role_name?.toLowerCase().trim() === 'super admin';
+  const isOrgAdmin = user.role_name?.toLowerCase().trim() === 'admin';
+  const userOrgId = parseInt(user.org_id) || null;
+  
   const [formData, setFormData] = useState({
     activity_id: '',
     trainer_id: '',
@@ -19,6 +25,7 @@ const ActivityTrainerForm = () => {
   const [pageLoading, setPageLoading] = useState(false);
   const [activities, setActivities] = useState([]);
   const [activitiesLoading, setActivitiesLoading] = useState(true);
+  const [allTrainers, setAllTrainers] = useState([]);
   const [trainers, setTrainers] = useState([]);
   const [trainersLoading, setTrainersLoading] = useState(true);
 
@@ -37,7 +44,14 @@ const ActivityTrainerForm = () => {
     try {
       setActivitiesLoading(true);
       const data = await getAllActivities();
-      setActivities(Array.isArray(data) ? data : []);
+      let activityList = Array.isArray(data) ? data : [];
+      
+      // If user is org admin, show only their organization's activities
+      if (isOrgAdmin && userOrgId) {
+        activityList = activityList.filter(activity => activity.org_id === userOrgId);
+      }
+      
+      setActivities(activityList);
     } catch (err) {
       console.error('Error fetching activities:', err);
       setServerError('Failed to load activities');
@@ -50,13 +64,44 @@ const ActivityTrainerForm = () => {
     try {
       setTrainersLoading(true);
       const data = await getAllTrainers();
-      setTrainers(Array.isArray(data) ? data : []);
+      let trainerList = Array.isArray(data) ? data : [];
+      
+      // Store all trainers
+      setAllTrainers(trainerList);
+      
+      // For Super Admin, don't show trainers initially - wait for activity selection
+      if (isSuperAdmin) {
+        setTrainers([]);
+      }
+      // For Organization Admin, show only their organization's trainers
+      else if (isOrgAdmin && userOrgId) {
+        trainerList = trainerList.filter(trainer => trainer.org_id === userOrgId);
+        setTrainers(trainerList);
+      }
     } catch (err) {
       console.error('Error fetching trainers:', err);
       setServerError('Failed to load trainers');
     } finally {
       setTrainersLoading(false);
     }
+  };
+
+  const filterTrainersByActivity = (activityId) => {
+    if (!activityId) {
+      setTrainers([]);
+      return;
+    }
+    
+    // Find the activity to get its org_id
+    const activity = activities.find(a => a.id === parseInt(activityId));
+    if (!activity) {
+      setTrainers([]);
+      return;
+    }
+    
+    // Filter trainers by the activity's organization
+    let filteredTrainers = allTrainers.filter(trainer => trainer.org_id === activity.org_id);
+    setTrainers(filteredTrainers);
   };
 
   const loadActivityTrainer = async () => {
@@ -103,6 +148,11 @@ const ActivityTrainerForm = () => {
         ...prev,
         [name]: '',
       }));
+    }
+    
+    // Filter trainers when activity changes (for Super Admin)
+    if (name === 'activity_id' && isSuperAdmin) {
+      filterTrainersByActivity(value);
     }
   };
 

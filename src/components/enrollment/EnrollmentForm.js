@@ -12,6 +12,7 @@ const EnrollmentForm = () => {
   
   // Get user and org info
   const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const isSuperAdmin = user.role_name?.toLowerCase().trim() === 'super admin';
   const isOrgAdmin = user.role_name?.toLowerCase().trim() === 'admin';
   const userOrgId = parseInt(user.org_id) || null;
   
@@ -23,7 +24,9 @@ const EnrollmentForm = () => {
     status: 'Active'
   });
   const [organizations, setOrganizations] = useState([]);
+  const [allBatches, setAllBatches] = useState([]);
   const [batches, setBatches] = useState([]);
+  const [allStudents, setAllStudents] = useState([]);
   const [students, setStudents] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -79,12 +82,18 @@ const EnrollmentForm = () => {
       const data = await getAllBatches();
       let batchList = Array.isArray(data) ? data : [];
       
-      // If user is org admin, show only their organization's batches
-      if (isOrgAdmin && userOrgId) {
-        batchList = batchList.filter(batch => batch.org_id === userOrgId);
-      }
+      // Store all batches
+      setAllBatches(batchList);
       
-      setBatches(batchList);
+      // For Super Admin, don't show any batches initially - wait for organization selection
+      if (isSuperAdmin) {
+        setBatches([]);
+      }
+      // For Organization Admin, show only their organization's batches
+      else if (isOrgAdmin && userOrgId) {
+        batchList = batchList.filter(batch => batch.org_id === userOrgId);
+        setBatches(batchList);
+      }
     } catch (err) {
       console.error('Error fetching batches:', err);
     }
@@ -95,15 +104,37 @@ const EnrollmentForm = () => {
       const data = await getAllStudents();
       let studentList = Array.isArray(data) ? data : [];
       
-      // If user is org admin, show only their organization's students
-      if (isOrgAdmin && userOrgId) {
-        studentList = studentList.filter(student => student.org_id === userOrgId);
-      }
+      // Store all students
+      setAllStudents(studentList);
       
-      setStudents(studentList);
+      // For Super Admin, don't show any students initially - wait for organization selection
+      if (isSuperAdmin) {
+        setStudents([]);
+      }
+      // For Organization Admin, show only their organization's students
+      else if (isOrgAdmin && userOrgId) {
+        studentList = studentList.filter(student => student.org_id === userOrgId);
+        setStudents(studentList);
+      }
     } catch (err) {
       console.error('Error fetching students:', err);
     }
+  };
+
+  const filterByOrganization = (orgId) => {
+    if (!orgId) {
+      setBatches([]);
+      setStudents([]);
+      return;
+    }
+    
+    // Filter batches by organization
+    const filteredBatches = allBatches.filter(batch => batch.org_id === parseInt(orgId));
+    setBatches(filteredBatches);
+    
+    // Filter students by organization
+    const filteredStudents = allStudents.filter(student => student.org_id === parseInt(orgId));
+    setStudents(filteredStudents);
   };
 
   const handleChange = (e) => {
@@ -113,6 +144,11 @@ const EnrollmentForm = () => {
       [name]: value
     }));
     setError('');
+    
+    // Filter students and batches when organization changes (for Super Admin)
+    if (name === 'org_id' && isSuperAdmin) {
+      filterByOrganization(value);
+    }
   };
 
   const validateForm = () => {
@@ -174,6 +210,7 @@ const EnrollmentForm = () => {
               name="org_id" 
               value={form.org_id} 
               onChange={handleChange}
+              disabled={isOrgAdmin}
               required
             >
               <option value="">-- Select Organization --</option>

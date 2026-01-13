@@ -3,6 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { createAttendance, updateAttendance, getAttendance } from '../../services/attendanceService';
 import { getAllSessions } from '../../services/sessionService';
 import { getAllEnrollments } from '../../services/enrollmentService';
+import { getAllBatches } from '../../services/batchService';
+import { getAllStudents } from '../../services/studentService';
 import './AttendanceForm.css';
 
 const AttendanceForm = () => {
@@ -12,6 +14,8 @@ const AttendanceForm = () => {
     status: 'present',
     marked_at: new Date().toISOString().slice(0, 16),
     marked_by: '',
+    start_time: '',
+    end_time: '',
   });
 
   const [errors, setErrors] = useState({});
@@ -27,6 +31,11 @@ const AttendanceForm = () => {
   const navigate = useNavigate();
   const { attendanceId } = useParams();
 
+  // Get user and org info from localStorage
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const isSuperAdmin = user.role_name?.toLowerCase().trim() === 'super admin';
+  const userOrgId = parseInt(user.org_id) || null;
+
   useEffect(() => {
     fetchSessions();
     fetchEnrollments();
@@ -39,7 +48,31 @@ const AttendanceForm = () => {
     try {
       setSessionsLoading(true);
       const data = await getAllSessions();
-      setSessions(Array.isArray(data) ? data : []);
+      let sessionsData = Array.isArray(data) ? data : [];
+      
+      console.log('All sessions:', sessionsData);
+      console.log('User org_id:', userOrgId, 'Is Super Admin:', isSuperAdmin);
+      
+      // If not Super Admin, filter by user organization
+      if (!isSuperAdmin && userOrgId) {
+        // Get all batches to filter by organization
+        const allBatches = await getAllBatches();
+        const userOrgBatches = Array.isArray(allBatches)
+          ? allBatches.filter(batch => batch.org_id === userOrgId)
+          : [];
+        
+        const userOrgBatchIds = userOrgBatches.map(batch => batch.id || batch.batch_id);
+        console.log('User org batches:', userOrgBatchIds);
+        
+        // Filter sessions to only those in user's org batches
+        sessionsData = sessionsData.filter(session =>
+          userOrgBatchIds.includes(session.batch_id)
+        );
+        
+        console.log('Sessions filtered to org:', sessionsData);
+      }
+      
+      setSessions(sessionsData);
     } catch (err) {
       console.error('Error fetching sessions:', err);
       setSessions([]);
@@ -52,12 +85,31 @@ const AttendanceForm = () => {
     try {
       setEnrollmentsLoading(true);
       const data = await getAllEnrollments();
-      console.log('Enrollments fetched successfully:', data);
-      console.log('Total enrollments:', Array.isArray(data) ? data.length : 0);
-      if (Array.isArray(data) && data.length > 0) {
-        console.log('Sample enrollments:', data.slice(0, 3).map(e => ({ id: e.id, enrollment_id: e.enrollment_id })));
+      let enrollmentsData = Array.isArray(data) ? data : [];
+      
+      console.log('All enrollments fetched:', enrollmentsData.length);
+      console.log('User org_id:', userOrgId, 'Is Super Admin:', isSuperAdmin);
+      
+      // If not Super Admin, filter by user organization
+      if (!isSuperAdmin && userOrgId) {
+        // Get all students to filter by organization
+        const allStudents = await getAllStudents();
+        const userOrgStudents = Array.isArray(allStudents)
+          ? allStudents.filter(student => student.org_id === userOrgId)
+          : [];
+        
+        const userOrgStudentIds = userOrgStudents.map(student => student.id || student.student_id);
+        console.log('User org students:', userOrgStudentIds);
+        
+        // Filter enrollments to only those for user's org students
+        enrollmentsData = enrollmentsData.filter(enrollment =>
+          userOrgStudentIds.includes(enrollment.student_id)
+        );
+        
+        console.log('Enrollments filtered to org:', enrollmentsData);
       }
-      setEnrollments(Array.isArray(data) ? data : []);
+      
+      setEnrollments(enrollmentsData);
     } catch (err) {
       console.error('Error fetching enrollments:', err);
       console.error('Error message:', err.message);
@@ -261,6 +313,14 @@ const AttendanceForm = () => {
 
   return (
     <div className="attendance-form-container">
+      <button 
+        className="btn btn-secondary"
+        onClick={() => navigate('/attendance')}
+        style={{ marginBottom: '20px' }}
+      >
+        ← Back to Attendance
+      </button>
+
       <div className="attendance-form-card">
         <h2>{isEditMode ? 'Edit Attendance Record' : 'Record New Attendance'}</h2>
 
@@ -304,28 +364,26 @@ const AttendanceForm = () => {
 
           <div className="attendance-form-row">
             <div className="attendance-form-group">
-              <label htmlFor="start_time_display">Start Time</label>
+              <label htmlFor="start_time">Start Time</label>
               <input
-                type="text"
-                id="start_time_display"
-                name="start_time_display"
-                value={getSessionStartTime(formData.session_id)}
-                readOnly
+                type="time"
+                id="start_time"
+                name="start_time"
+                value={formData.start_time}
+                onChange={handleChange}
                 className="attendance-form-input"
-                style={{ backgroundColor: '#f5f5f5' }}
               />
             </div>
 
             <div className="attendance-form-group">
-              <label htmlFor="end_time_display">End Time</label>
+              <label htmlFor="end_time">End Time</label>
               <input
-                type="text"
-                id="end_time_display"
-                name="end_time_display"
-                value={getSessionEndTime(formData.session_id)}
-                readOnly
+                type="time"
+                id="end_time"
+                name="end_time"
+                value={formData.end_time}
+                onChange={handleChange}
                 className="attendance-form-input"
-                style={{ backgroundColor: '#f5f5f5' }}
               />
             </div>
 

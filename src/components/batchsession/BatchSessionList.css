@@ -11,29 +11,29 @@
 }
 
 .batchsession-list-header {
-  display: block;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 30px;
-  position: relative;
+  gap: 80px;
 }
 
 .batchsession-list-header h1 {
   font-size: 28px;
   font-weight: 700;
   color: white;
-  margin: 0 0 20px 0;
+  margin: 0;
 }
 
 .batchsession-list-header h2 {
   font-size: 28px;
   font-weight: 700;
   color: white;
-  margin: 0 0 20px 0;
+  margin: 0;
 }
 
 .batchsession-list-header .btn {
-  position: absolute;
-  right: 0;
-  top: 0;
+  flex-shrink: 0;
 }
 .batchsession-empty-state {
   text-align: center;

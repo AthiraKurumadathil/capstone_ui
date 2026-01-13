@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getAllAttendance, deleteAttendance } from '../../services/attendanceService';
 import { getAllSessions } from '../../services/sessionService';
+import { getAllBatches } from '../../services/batchService';
 import './AttendanceList.css';
 
 const AttendanceList = () => {
@@ -14,7 +15,7 @@ const AttendanceList = () => {
   
   // Get user and org info
   const user = JSON.parse(localStorage.getItem('user') || '{}');
-  const isOrgAdmin = user.role_name?.toLowerCase().trim() === 'admin';
+  const isSuperAdmin = user.role_name?.toLowerCase().trim() === 'super admin';
   const userOrgId = parseInt(user.org_id) || null;
 
   useEffect(() => {
@@ -25,7 +26,31 @@ const AttendanceList = () => {
   const fetchSessions = async () => {
     try {
       const data = await getAllSessions();
-      setSessions(Array.isArray(data) ? data : []);
+      let sessionsData = Array.isArray(data) ? data : [];
+      
+      console.log('All sessions:', sessionsData);
+      console.log('User org_id:', userOrgId, 'Is Super Admin:', isSuperAdmin);
+      
+      // If not Super Admin, filter by user organization
+      if (!isSuperAdmin && userOrgId) {
+        // Get all batches to filter by organization
+        const allBatches = await getAllBatches();
+        const userOrgBatches = Array.isArray(allBatches)
+          ? allBatches.filter(batch => batch.org_id === userOrgId)
+          : [];
+        
+        const userOrgBatchIds = userOrgBatches.map(batch => batch.id || batch.batch_id);
+        console.log('User org batches:', userOrgBatchIds);
+        
+        // Filter sessions to only those in user's org batches
+        sessionsData = sessionsData.filter(session =>
+          userOrgBatchIds.includes(session.batch_id)
+        );
+        
+        console.log('Sessions filtered to org:', sessionsData);
+      }
+      
+      setSessions(sessionsData);
     } catch (err) {
       console.error('Error fetching sessions:', err);
       setSessions([]);
@@ -36,14 +61,40 @@ const AttendanceList = () => {
     try {
       setIsLoading(true);
       const data = await getAllAttendance();
-      let filteredData = Array.isArray(data) ? data : [];
+      let attendanceData = Array.isArray(data) ? data : [];
       
-      // Attendance records don't need org_id filtering at the list level
-      // They are filtered by the backend based on the enrollments and sessions
-      // If org admin, the API should only return records for their organization
+      console.log('All attendance records:', attendanceData.length);
+      console.log('User org_id:', userOrgId, 'Is Super Admin:', isSuperAdmin);
       
-      console.log('Fetched attendance records:', filteredData);
-      setAttendance(filteredData);
+      // If not Super Admin, filter by user organization
+      if (!isSuperAdmin && userOrgId) {
+        // Get all sessions for the user's organization
+        const allSessions = await getAllSessions();
+        let userOrgSessions = Array.isArray(allSessions) ? allSessions : [];
+        
+        // Filter sessions by user organization
+        const allBatches = await getAllBatches();
+        const userOrgBatches = Array.isArray(allBatches)
+          ? allBatches.filter(batch => batch.org_id === userOrgId)
+          : [];
+        
+        const userOrgBatchIds = userOrgBatches.map(batch => batch.id || batch.batch_id);
+        userOrgSessions = userOrgSessions.filter(session =>
+          userOrgBatchIds.includes(session.batch_id)
+        );
+        
+        const userOrgSessionIds = userOrgSessions.map(session => session.id || session.session_id);
+        console.log('User org sessions:', userOrgSessionIds);
+        
+        // Filter attendance to only those for user's org sessions
+        attendanceData = attendanceData.filter(att =>
+          userOrgSessionIds.includes(att.session_id)
+        );
+        
+        console.log('Attendance filtered to org:', attendanceData);
+      }
+      
+      setAttendance(attendanceData);
       setError('');
     } catch (err) {
       const errorMsg = err.message || 'Failed to load attendance records';

@@ -26,6 +26,11 @@ const BatchSessionForm = () => {
   const navigate = useNavigate();
   const { sessionId } = useParams();
 
+  // Get user and org info from localStorage
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const isSuperAdmin = user.role_name?.toLowerCase().trim() === 'super admin';
+  const userOrgId = parseInt(user.org_id) || null;
+
   useEffect(() => {
     fetchBatches();
     if (sessionId) {
@@ -37,7 +42,18 @@ const BatchSessionForm = () => {
     try {
       setBatchesLoading(true);
       const data = await getAllBatches();
-      setBatches(Array.isArray(data) ? data : []);
+      let batchesData = Array.isArray(data) ? data : [];
+      
+      console.log('All batches:', batchesData);
+      console.log('User org_id:', userOrgId, 'Is Super Admin:', isSuperAdmin);
+      
+      // If not Super Admin, filter by user organization
+      if (!isSuperAdmin && userOrgId) {
+        batchesData = batchesData.filter(batch => batch.org_id === userOrgId);
+        console.log('Batches filtered to org:', batchesData);
+      }
+      
+      setBatches(batchesData);
     } catch (err) {
       console.error('Error fetching batches:', err);
       setBatches([]);
